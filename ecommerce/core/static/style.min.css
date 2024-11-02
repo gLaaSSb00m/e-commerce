@@ -12023,9 +12023,10 @@ ul {
   list-style: none;
 }
 a {
-  color: #777;
+  color: #ffffff;
   text-decoration: none;
   transition: all 0.5s ease;
+
   outline: 0;
 }
 a:hover {
@@ -12068,6 +12069,7 @@ input {
   .section-fluid {
     padding-left: 40px;
     padding-right: 40px;
+    /* padding-bottom: 40px; */
   }
 }
 @media (min-width: 1440px) {
@@ -12087,6 +12089,7 @@ input {
 @media (min-width: 992px) {
   .section-top-gap-100 {
     margin-top: 100px;
+    margin-bottom: 100px;
   }
 }
 .section-inner-bg {
@@ -16682,7 +16685,7 @@ table {
 }
 .material-scrolltop,
 .material-scrolltop::before {
-  background-image: url(../images/icons/top-arrow.svg);
+  background-image: url(../static/top-arrow.svg);
   background-position: center 50%;
   background-repeat: no-repeat;
 }
