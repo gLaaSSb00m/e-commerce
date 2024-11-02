@@ -1,7 +1,17 @@
 from django.shortcuts import render
+from item.models import Catagory,Item
+from itertools import zip_longest
 
 def index(request):
-    return render(request,'index.html')
+    items = Item.objects.filter(is_sold=False)
+    catagory = Catagory.objects.all()
+    next_items = items[7:30]  # Adjust this slice as needed
+    paired_list = list(zip_longest(*[iter(next_items)] * 2))  # Pairs of items
+    return render(request, 'index.html', {
+        'catagory': catagory,
+        'items': items,
+        'paired_list': paired_list,
+    })
 def shop(request):
     return render(request,'shop.html')
 def blog(request):
