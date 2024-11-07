@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from item.models import Catagory,Item
 from itertools import zip_longest
-
+from .forms import SignupForm
 def index(request):
     items = Item.objects.filter(is_sold=False)
     catagory = Catagory.objects.all()
@@ -38,3 +38,9 @@ def about_us(request):
     return render(request,'about-us.html')
 def contact_us(request):
     return render(request,'contact-us.html')
+def signup(request):
+    form =SignupForm()
+    return render(request,'signup.html',{
+        'form' : form
+    })
+    

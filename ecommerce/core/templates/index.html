@@ -50,7 +50,7 @@
                             <!-- Start Header Logo -->
                             <div class="header-logo">
                                 <div class="logo">
-                                    <a href="{% url 'index' %}"><img src="/static/assets/img/log21.png" alt=""></a>
+                                    <a href="{% url 'core:index' %}"><img src="/static/assets/img/log21.png" alt=""></a>
                                 </div>
                             </div>
                             <!-- End Header Logo -->
@@ -60,7 +60,7 @@
                                 <nav>
                                     <ul>
                                         <li class="has-dropdown">
-                                            <a class="active main-menu-link" href="{% url 'index' %}">
+                                            <a class="active main-menu-link" href="{% url 'core:index' %}">
                                                 Home
                                             </a>
                                             <!-- Sub Menu -->
@@ -94,7 +94,6 @@
                                                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                                <li><a href="{% url 'login' %}">Login</a></li>
                                                 <li><a href="{% url 'my_account' %}">My Account</a></li>
                                             </ul>
                                         </li>
@@ -102,8 +101,11 @@
                                             <a href="{% url 'about_us' %}">About Us</a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'contact_us' %}">Contact Us</a>
+                                            <a href="{% url 'core:contact_us' %}">Contact Us</a>
                                         </li>
+                                        <li><a href="{% url 'login' %}">Login</a></li>
+                                        <li><span>or</span></a></li>
+                                        <li><a href="{% url 'core:signup' %}">SignUp</a></li>
                                     </ul>
                                 </nav>
                             </div>
@@ -152,7 +154,7 @@
                     <div class="mobile-header-left">
                         <ul class="mobile-menu-logo">
                             <li>
-                                <a href="{% url 'index' %}">
+                                <a href="{% url 'core:index' %}">
                                     <div class="logo">
                                         <img src="/static/assets/img/log21.png" alt="">
                                     </div>
@@ -210,7 +212,7 @@
                 <div class="offcanvas-menu">
                     <ul>
                         <li>
-                            <a href="{% url 'index' %}"><span>Home</span></a>
+                            <a href="{% url 'core:index' %}"><span>Home</span></a>
                         </li>
                         <li>
                             <a href="{% url 'shop' %}"><span>Shop</span></a>
@@ -229,12 +231,15 @@
                                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                <li><a href="{% url 'login' %}">Login</a></li>
+                                
                                 <li><a href="{% url 'my_account' %}">My Account</a></li>
                             </ul>
                         </li>
                         <li><a href="{% url 'about_us' %}">About Us</a></li>
-                        <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                        <li><a href="{% url 'core:contact_us' %}">Contact Us</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><span>or</span></li>
+                        <li><a href="{% url 'core:signup' %}">SignUp</a></li>
                     </ul>
                 </div> <!-- End Mobile Menu Nav -->
             </div> <!-- End Mobile Menu -->
@@ -242,7 +247,7 @@
             <!-- Start Mobile contact Info -->
             <div class="mobile-contact-info">
                 <div class="logo">
-                    <a href="{% url 'index' %}"><img src="/static/assets/img/1.png" alt=""></a>
+                    <a href="{% url 'core:index' %}"><img src="/static/assets/img/1.png" alt=""></a>
                 </div>
 
                 <address class="address">
@@ -279,7 +284,7 @@
         <!-- Start Mobile contact Info -->
         <div class="mobile-contact-info">
             <div class="logo">
-                <a href="{% url 'index' %}"><img src="/static/assets/img/1.png" alt=""></a>
+                <a href="{% url 'core:index' %}"><img src="/static/assets/img/1.png" alt=""></a>
             </div>
 
             <address class="address">
@@ -480,7 +485,7 @@
                     
                     <div class="hero-slider-bg">
                         
-                        <img src="{{ items.0.image.url }}" alt="{{items.image.url}}">
+                        <img src="{{ items.0.image.url }}" alt="">
                     </div>
                     
                     <!-- Hero Slider Content -->
@@ -1027,7 +1032,7 @@
                                 <ul class="footer-nav">
                                     <li><a href="#">Delivery Information</a></li>
                                     <li><a href="#">Terms & Conditions</a></li>
-                                    <li><a href="{% url 'contact_us' %}">Contact</a></li>
+                                    <li><a href="{% url 'core:contact_us' %}">Contact</a></li>
                                     <li><a href="#">Returns</a></li>
                                 </ul>
                             </div>
@@ -1125,7 +1130,7 @@
                         class="row justify-content-between align-items-center align-items-center flex-column flex-md-row mb-n6">
                         <div class="col-auto mb-6">
                             <div class="footer-copyright">
-                                <p class="copyright-text">&copy; 2024 <a href="{% url 'index' %}">ShpoEase</a>. All content, including text, graphics, logos, images, and software on this website, is the property of ShopeEase or its content suppliers and is protected by international copyright laws. Unauthorized reproduction, distribution, or modification of any content from this website without prior written permission is strictly prohibited.<br>
+                                <p class="copyright-text">&copy; 2024 <a href="{% url 'core:index' %}">ShpoEase</a>. All content, including text, graphics, logos, images, and software on this website, is the property of ShopeEase or its content suppliers and is protected by international copyright laws. Unauthorized reproduction, distribution, or modification of any content from this website without prior written permission is strictly prohibited.<br>
                                 <a href="https://therankme.com/"
                                 target="_blank">For inquiries regarding the use of our content, please contact us</a> </p>
 

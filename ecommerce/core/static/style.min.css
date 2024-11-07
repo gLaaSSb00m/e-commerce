@@ -1280,6 +1280,9 @@ progress {
     width: 41.6666666667%;
   }
   .col-lg-6 {
+    /* margin: 1.5rem; */
+    margin-top: 2rem;
+    margin-left: 28%;
     flex: 0 0 auto;
     width: 50%;
   }
@@ -12039,6 +12042,7 @@ input {
   outline: 0 !important;
   background: 0 0;
   box-shadow: none;
+  color: black;
 }
 input {
   width: 100%;
@@ -15580,7 +15584,7 @@ table {
 .main-menu nav > ul > li > a {
   display: block;
   line-height: 24px;
-  padding: 25px 30px;
+  padding: 25px 20px;
   font-size: 14px;
   line-height: 30px;
   text-transform: uppercase;
