@@ -41,7 +41,6 @@
 </head>
 
 <body>
-    
 
     
 
@@ -55,60 +54,51 @@
         <div class="container">
             <div class="row">
                 <!--register area start-->
+                {% block content %}
                 <div class="col-lg-6 col-md-6">
                     <div class="account_form register" data-aos="fade-up" data-aos-delay="200">
                         <h3>Register</h3>
-                        <form method="post" action="#">
-                            
+                        <form method="post" action=".">
+                            {% csrf_token %}
                             <div class="default-form-box">
-                                {% comment %} <label>
-                                <input type="email">
-                                Email address <span>*</span>
-                                </label> {% endcomment %}
                                 <label>
                                     User Name <span>*</span>
-                                {{form.username}}
-                                <label/>
+                                    {{ form.username }}
+                                </label>
                             </div>
                             <div class="default-form-box">
                                 <label>
-                                
-                                Email address <span>*</span>
-                                {{form.email}}
+                                    Email address <span>*</span>
+                                    {{ form.email }}
                                 </label>
-                                
                             </div>
                             <div class="default-form-box">
                                 <label>
-                                
-                                Passwords <span>*</span>
-                                {{form.password1}}
+                                    Password <span>*</span>
+                                    {{ form.password1 }}
                                 </label>
-                                
                             </div>
                             <div class="default-form-box">
                                 <label>
-                                
-                                Repeat Passwords <span>*</span>
-                                {{form.password2}}
+                                    Repeat Password <span>*</span>
+                                    {{ form.password2 }}
                                 </label>
-                                
                             </div>
                             {% if form.errors or form.non_field_errors %}
                             <div class="mb-3 p-6 bg-red-100 rounder-xl">
                                 {% for field in form %}
-                                    {{field.errors}}
+                                    {{ field.errors }}
                                 {% endfor %}
-                                {{form.non_field_errors}}
+                                {{ form.non_field_errors }}
                             </div>
-                            {% endif%}
+                            {% endif %}
                             <div class="login_submit">
-                                
                                 <button class="btn btn-md btn-black-default-hover" type="submit">Register</button>
                             </div>
                         </form>
                     </div>
                 </div>
+                {% endblock %}
                 <!--register area end-->
             </div>
         </div>

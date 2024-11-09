@@ -89,12 +89,14 @@
                                             <ul class="sub-menu">
                                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                                                <li><a href="{% url 'cart' %}">Cart</a></li>
-                                                <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
-                                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                                                <li><a href="{% url 'compare' %}">Compare</a></li>
-                                                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                {% if request.user.is_authenticated %}
+                                                    <li><a href="{% url 'cart' %}">Cart</a></li>
+                                                    <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
+                                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                                    <li><a href="{% url 'compare' %}">Compare</a></li>
+                                                    <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                                                    <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                {% endif %}
                                             </ul>
                                         </li>
                                         <li>
@@ -103,9 +105,12 @@
                                         <li>
                                             <a href="{% url 'core:contact_us' %}">Contact Us</a>
                                         </li>
-                                        <li><a href="{% url 'login' %}">Login</a></li>
-                                        <li><span>or</span></a></li>
-                                        <li><a href="{% url 'core:signup' %}">SignUp</a></li>
+                                        {% if request.user.is_authenticated %}
+                                        {% else %}
+                                            <li><a href="{% url 'core:login' %}">Login</a></li>
+                                            <li><span>or</span></li>
+                                            <li><a href="{% url 'core:signup' %}">SignUp</a></li>
+                                        {% endif %}
                                     </ul>
                                 </nav>
                             </div>
@@ -237,9 +242,12 @@
                         </li>
                         <li><a href="{% url 'about_us' %}">About Us</a></li>
                         <li><a href="{% url 'core:contact_us' %}">Contact Us</a></li>
-                        <li><a href="{% url 'login' %}">Login</a></li>
-                        <li><span>or</span></li>
-                        <li><a href="{% url 'core:signup' %}">SignUp</a></li>
+                        {% if request.user.is_authenticated %}
+                        {% else %}
+                            <li><a href="{% url 'core:login' %}">Login</a></li>
+                            <li><span>or</span></li>
+                            <li><a href="{% url 'core:signup' %}">SignUp</a></li>
+                        {% endif %}
                     </ul>
                 </div> <!-- End Mobile Menu Nav -->
             </div> <!-- End Mobile Menu -->

@@ -56,17 +56,30 @@
             <div class="row">
                 <!--login area start-->
                 <div class="col-lg-6 col-md-6">
-                    <div class="account_form" data-aos="fade-up" data-aos-delay="0">
-                        <h3>login</h3>
-                        <form action="#" method="POST">
+                    <div class="account_form register" data-aos="fade-up" data-aos-delay="200">
+                        <h3>Login</h3>
+                        <form method="post" action=".">
+                            {% csrf_token %}
                             <div class="default-form-box">
-                                <label>Username or email <span>*</span></label>
-                                <input type="text">
+                                <label>
+                                    User Name <span></span>
+                                    {{ form.username }}
+                                </label>
                             </div>
                             <div class="default-form-box">
-                                <label>Passwords <span>*</span></label>
-                                <input type="password">
+                                <label>
+                                    Password <span></span>
+                                    {{ form.password }}
+                                </label>
                             </div>
+                            {% if form.errors or form.non_field_errors %}
+                            <div class="mb-3 p-6 bg-red-100 rounder-xl">
+                                {% for field in form %}
+                                    {{ field.errors }}
+                                {% endfor %}
+                                {{ form.non_field_errors }}
+                            </div>
+                            {% endif %}
                             <div class="login_submit">
                                 <button class="btn btn-md btn-black-default-hover mb-4" type="submit">login</button>
                                 <label class="checkbox-default mb-4" for="offer">
@@ -74,7 +87,6 @@
                                     <span>Remember me</span>
                                 </label>
                                 <a href="#">Lost your password?</a>
-
                             </div>
                         </form>
                     </div>

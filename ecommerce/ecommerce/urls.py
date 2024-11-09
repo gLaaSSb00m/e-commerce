@@ -28,7 +28,6 @@ urlpatterns = [
     path('faq',views.faq,name='faq'),
     path('privacy-policy',views.privacy_policy,name='privacy_policy'),
     path('my-account',views.my_account,name='my_account'),
-    path('login',views.login,name='login'),
     path('checkout',views.checkout,name='checkout'),
     path('cart',views.cart,name='cart'),
     path('empty-cart',views.empty_cart,name='empty_cart'),
