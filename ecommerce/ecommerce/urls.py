@@ -34,7 +34,7 @@ urlpatterns = [
     path('wishlist',views.wishlist,name='wishlist'),
     path('compare',views.compare,name='compare'),
     path('about-us',views.about_us,name='about_us'),
-    
+    # path('inbox/', include('conversation.urls')),
     path('admin/', admin.site.urls),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

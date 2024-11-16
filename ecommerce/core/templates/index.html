@@ -471,8 +471,8 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form>
-            <input type="search" placeholder="type keyword(s) here" />
+        <form method='get' action={% url 'item:items'%}>
+            <input name="query" type="search" value="{{ query }}" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
     </div>
@@ -629,7 +629,7 @@
                                 <h5 class="sub-title">We design your home</h5>
                                 <a href="{% url 'item:detail' items.34.id %}"
                                     class="btn btn-lg btn-outline-golden icon-space-left"><span
-                                        class="d-flex align-items-center">Shop now <i
+                                        class="d-flex align-items-center">discover now <i
                                             class="ion-ios-arrow-thin-right"></i></span></a>
                             </div>
                         </div>
@@ -669,13 +669,15 @@
                                     </div>
                                 </div>
                             </div>
+                            </div>
                             <!-- End Banner Single Item -->
                             <!-- Start Banner Single Item -->
                             <div class="col-lg-6 col-sm-6 mb-6">
                                 <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                     data-aos="fade-up" data-aos-delay="0">
-                                    <div class="image" style= "height: 166px">
-                                    <img src="{{ items.5.image.url }}" alt="">
+                                    <div class="image">
+                                        <img src="{{ items.5.image.url }}" alt="">
+                                    </div>
                                     </div>
                                     <div class="content">
                                         <h4 class="title">T-Shirt
@@ -1067,11 +1069,15 @@
                                 data-aos-delay="400">
                                 <h5 class="title">CATEGORIES</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="#">Decorative</a></li>
+                                    {% for category in catagory%}
+                                    <li class="py-2 px-2 rounded-xl{% if category.id == catagory_id %} bg-gray-200{% endif %}">
+                                        <a href="{% url 'item:items'%}?query={{ query }}&category={{ category.id }}">{{ category.name}}</a></li>
+                                    {%endfor%}
+                                    {% comment %} <li><a href="#">Decorative</a></li>
                                     <li><a href="#">Kitchen utensils</a></li>
                                     <li><a href="#">Chair & Bar stools</a></li>
                                     <li><a href="#">Sofas and Armchairs</a></li>
-                                    <li><a href="#">Interior lighting</a></li>
+                                    <li><a href="#">Interior lighting</a></li> {% endcomment %}
                                 </ul>
                             </div>
                             <!-- End Footer Single Item -->

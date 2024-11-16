@@ -22,8 +22,6 @@ def privacy_policy(request):
     return render(request,'privacy-policy.html')
 def my_account(request):
     return  render(request,'my-account.html')
-# def login(request):
-#     return   render(request,'login.html')
 def checkout(request):
     return render(request,'checkout.html')
 def cart(request):
