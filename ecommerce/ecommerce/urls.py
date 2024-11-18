@@ -21,21 +21,20 @@ from django.contrib import admin
 from django.urls import path,include
 from core import views
 urlpatterns = [
-    path('',views.index,name='index'),
+    path('', include('core.urls')),
     path('items/',include('item.urls')),
     path('shop',views.shop,name='shop'),
     path('blog',views.blog,name='blog'),
     path('faq',views.faq,name='faq'),
     path('privacy-policy',views.privacy_policy,name='privacy_policy'),
     path('my-account',views.my_account,name='my_account'),
-    path('login',views.login,name='login'),
     path('checkout',views.checkout,name='checkout'),
     path('cart',views.cart,name='cart'),
     path('empty-cart',views.empty_cart,name='empty_cart'),
     path('wishlist',views.wishlist,name='wishlist'),
     path('compare',views.compare,name='compare'),
     path('about-us',views.about_us,name='about_us'),
-    path('contact-us',views.contact_us,name='contact_us'),
+    # path('inbox/', include('conversation.urls')),
     path('admin/', admin.site.urls),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

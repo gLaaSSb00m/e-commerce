@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from item.models import Catagory,Item
 from itertools import zip_longest
-
+from .forms import SignupForm
 def index(request):
     items = Item.objects.filter(is_sold=False)
     catagory = Catagory.objects.all()
@@ -22,8 +22,6 @@ def privacy_policy(request):
     return render(request,'privacy-policy.html')
 def my_account(request):
     return  render(request,'my-account.html')
-def login(request):
-    return   render(request,'login.html')
 def checkout(request):
     return render(request,'checkout.html')
 def cart(request):
@@ -38,3 +36,15 @@ def about_us(request):
     return render(request,'about-us.html')
 def contact_us(request):
     return render(request,'contact-us.html')
+def signup(request):
+    if request.method=='POST':
+        form=SignupForm(request.POST)
+        if form.is_valid():
+                form.save()
+                return redirect('/login/')
+    else:
+        form =SignupForm()
+    return render(request,'signup.html',{
+        'form' : form
+    })
+    
