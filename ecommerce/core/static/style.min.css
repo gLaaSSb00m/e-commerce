@@ -15169,7 +15169,9 @@ input {
 
 @media (min-width:992px) {
   .section-top-gap-100 {
-    margin-top: 100px
+    margin-top: 100px;
+    margin-bottom: 100px;
+    
   }
 }
 
@@ -15830,7 +15832,7 @@ input {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: .1em;
-  color: #24262b
+  color: #f9fbff
 }
 
 .banner-style-2 .content .link-text:hover {
