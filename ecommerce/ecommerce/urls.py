@@ -22,9 +22,9 @@ from django.urls import path,include
 from core import views
 urlpatterns = [
     path('',views.index,name='index'),
-    path('items/',include('item.urls')),
     path('shop',views.shop,name='shop'),
-    path('login',views.shop,name='login'),
+    path('login',views.login_user,name='login'),
+    path('logout',views.logout_user,name='logout'),
     path('blog',views.blog,name='blog'),
     path('faq',views.faq,name='faq'),
     path('privacy-policy',views.privacy_policy,name='privacy_policy'),
@@ -36,7 +36,9 @@ urlpatterns = [
     path('compare',views.compare,name='compare'),
     path('about-us',views.about_us,name='about_us'),
      path('contact-us',views.contact_us,name='contact_us'),
-    # path('inbox/', include('conversation.urls')),
+    path('register', views.register_user, name='register'),
+    path('product/<int:pk>/', views.product, name='product'),
+
     path('admin/', admin.site.urls),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

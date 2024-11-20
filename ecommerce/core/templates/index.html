@@ -46,6 +46,14 @@
             <div class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden">
                 <div class="container-fluid">
                     <div class="row">
+                        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" style= 'color:black; width:20vw' role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
                         <div class="col-12 d-flex align-items-center justify-content-between">
                             <!-- Start Header Logo -->
                             <div class="header-logo">
@@ -57,6 +65,8 @@
 
                             <!-- Start Header Main Menu -->
                             <div class="main-menu menu-color--black menu-hover-color--golden">
+                                
+
                                 <nav>
                                     <ul>
                                         <li class="has-dropdown">
@@ -89,6 +99,10 @@
                                             <ul class="sub-menu">
                                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
+                                                {% if user.is_authenticated == False %}
+                                                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                                                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                                                {% endif %}
                                                 {% if request.user.is_authenticated %}
                                                     <li><a href="{% url 'cart' %}">Cart</a></li>
                                                     <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
@@ -99,18 +113,21 @@
                                                 {% endif %}
                                             </ul>
                                         </li>
+                                        {% if user.is_authenticated%}
                                         <li>
                                             <a href="{% url 'about_us' %}">About Us</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'contact_us' %}">Contact Us</a>
                                         </li>
-                                        {% if request.user.is_authenticated %}
-                                        {% else %}
-                                            <li><a href="{% url 'core:login' %}">Login</a></li>
-                                            <li><span>or</span></li>
-                                            <li><a href="{% url 'core:signup' %}">SignUp</a></li>
                                         {% endif %}
+                                            {% if user.is_authenticated %}
+                                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                                            {% else %}
+                                            <li><a href="{% url 'login' %}">Login</a></li>
+                                            {% comment %} <span>or</span> {% endcomment %}
+                                            <li><a href="{% url 'register' %}">Sign Up</a></li>
+                                            {% endif %}
                                     </ul>
                                 </nav>
                             </div>
@@ -242,11 +259,10 @@
                         </li>
                         <li><a href="{% url 'about_us' %}">About Us</a></li>
                         <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
-                        {% if request.user.is_authenticated %}
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}">SignUp</a></li>
                         {% else %}
-                            <li><a href="{% url 'core:login' %}">Login</a></li>
-                            <li><span>or</span></li>
-                            <li><a href="{% url 'core:signup' %}">SignUp</a></li>
+                            <li><a href="{% url 'login' %}">Login</a></li>
                         {% endif %}
                     </ul>
                 </div> <!-- End Mobile Menu Nav -->
@@ -471,7 +487,7 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form method='get' action={% url 'item:items'%}>
+        <form method='get' action='#'>
             <input name="query" type="search" value="{{ query }}" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
@@ -802,7 +818,8 @@
                                     {% for first, second in paired_list1 %}
                                     <div class="product-default-single-item product-color--golden swiper-slide">
                                         <div class="image-box">
-                                            <a href="#" class="image-link">
+                                            <a href="{% url 'product' first
+                                            .id %}" class="image-link">
                                                 <!-- Display the first item's image -->
                                                 <img src="{{ first.image.url }}" alt="">
 
@@ -1003,7 +1020,7 @@
                                 <ul class="footer-nav">
                                     {% for category in catagory%}
                                     <li class="py-2 px-2 rounded-xl{% if category.id == catagory_id %} bg-gray-200{% endif %}">
-                                        <a href="{% url 'item:items'%}?query={{ query }}&category={{ category.id }}">{{ category.name}}</a></li>
+                                        <a href="#?query={{ query }}&category={{ category.id }}">{{ category.name}}</a></li>
                                     {%endfor%}
                                     {% comment %} <li><a href="#">Decorative</a></li>
                                     <li><a href="#">Kitchen utensils</a></li>

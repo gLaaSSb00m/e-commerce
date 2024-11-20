@@ -1,9 +1,20 @@
-from django.shortcuts import render,redirect
-from item.models import Catagory,Item
+from django.shortcuts import redirect, render,redirect
 from itertools import zip_longest
-from .forms import SignupForm
+from .forms import LoginForm, SignUpForm
 from .models import Product
 from django.db.models import Q
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+
+def product(request,pk):
+    product = Product.objects.get(id=pk)
+    return render(request,'product.html',{
+        'product' : product,
+    })
+
+
 def index(request):
     products=Product.objects.all()
     hero_sliders = Product.objects.filter(name="Hero_slider")
@@ -12,15 +23,11 @@ def index(request):
     banners3 = Product.objects.filter(name="banners3")
     banners4 =  Product.objects.filter(name='banner4')
     blogs= Product.objects.filter(name="BLOG")
-    items = Item.objects.filter(is_sold=False)
-    catagory = Catagory.objects.all()
     next_items = Product.objects.filter(name="New_arrive")  # Adjust this slice as needed
     paired_list = list(zip_longest(*[iter(next_items)] * 2))
     next_items1 = Product.objects.filter(name="best_seller")
     paired_list1 = list(zip_longest(*[iter(next_items1)] * 2))# Pairs of items
     return render(request, 'index.html', {
-        'catagory': catagory,
-        'items': items,
         'paired_list': paired_list,
         'products':products,
         'hero_sliders':hero_sliders,
@@ -58,16 +65,44 @@ def about_us(request):
     return render(request,'about-us.html')
 def contact_us(request):
     return render(request,'contact-us.html')
-def signup(request):
+
+def login_user(request):
     if request.method=='POST':
-        form=SignupForm(request.POST)
-        if form.is_valid():
-                form.save()
-                return redirect('/login/')
+        username=request.POST['username']
+        password=request.POST['password']
+        user = authenticate(request,username=username,password=password)
+        if user is not None:
+            login(request,user)
+            messages.success(request,("You have been Logged in"))
+            return redirect('index')
+        else:
+            messages.success(request,("There is an error,please try again"))
+            return redirect('login')
     else:
-        form =SignupForm()
+        return render(request,'login.html',{
+            'form':LoginForm(),
+        })
+
+def logout_user(request):
+    logout(request)
+    messages.success(request,("you have been logged out"))
+    return redirect('index')
+
+def register_user(request):
+    form=SignUpForm()
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user= authenticate(username=username, password=password)
+            login(request,user)
+            messages.success(request,("you have register successfully"))
+            return redirect('index')
+        else:
+            messages.success(request,("there is an error"))
+            return redirect('register')
     return render(request,'signup.html',{
-        'form' : form
+        'form':form,
     })
-def login(request):
-    return render(request,'login.html')
