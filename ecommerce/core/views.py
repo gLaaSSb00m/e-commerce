@@ -2,18 +2,40 @@ from django.shortcuts import render,redirect
 from item.models import Catagory,Item
 from itertools import zip_longest
 from .forms import SignupForm
+from .models import Product
+from django.db.models import Q
 def index(request):
+    products=Product.objects.all()
+    hero_sliders = Product.objects.filter(name="Hero_slider")
+    banners1 = Product.objects.filter(name="Banner1")
+    banners2 = Product.objects.filter(name="Banner2")
+    banners3 = Product.objects.filter(name="banners3")
+    banners4 =  Product.objects.filter(name='banner4')
+    blogs= Product.objects.filter(name="BLOG")
     items = Item.objects.filter(is_sold=False)
     catagory = Catagory.objects.all()
-    next_items = items[7:30]  # Adjust this slice as needed
-    paired_list = list(zip_longest(*[iter(next_items)] * 2))  # Pairs of items
+    next_items = Product.objects.filter(name="New_arrive")  # Adjust this slice as needed
+    paired_list = list(zip_longest(*[iter(next_items)] * 2))
+    next_items1 = Product.objects.filter(name="best_seller")
+    paired_list1 = list(zip_longest(*[iter(next_items1)] * 2))# Pairs of items
     return render(request, 'index.html', {
         'catagory': catagory,
         'items': items,
         'paired_list': paired_list,
+        'products':products,
+        'hero_sliders':hero_sliders,
+        'banners1':banners1,
+        'banners2':banners2,
+        'banners3':banners3,
+        'banners4':banners4,
+        'paired_list1':paired_list1,
+        'blogs':blogs,
     })
 def shop(request):
-    return render(request,'shop.html')
+    products=Product.objects.all()
+    return render(request,'shop.html',{
+        'products':products,
+    })
 def blog(request):
     return  render(request,'blog-list-sidebar-left.html')
 def faq(request):
@@ -47,4 +69,5 @@ def signup(request):
     return render(request,'signup.html',{
         'form' : form
     })
-    
+def login(request):
+    return render(request,'login.html')
