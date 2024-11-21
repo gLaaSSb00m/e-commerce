@@ -139,13 +139,13 @@
                                 <li>
                                     <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                                         <i class="icon-heart"></i>
-                                        <span class="item-count" id='cart_quantity'>cart|length</span>
+                                        <span class="item-count" >3</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                         <i class="icon-bag"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -198,13 +198,13 @@
                             <li>
                                 <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                                     <i class="icon-heart"></i>
-                                    <span class="item-count" id='cart_quantity'>cart|length</span>
+                                    <span class="item-count" >3</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity' >{{ cart|length }}</span>
                                 </a>
                             </li>
                             <li>
@@ -738,7 +738,7 @@
                                         <div class="product-default-single-item product-color--golden swiper-slide">
         
                                             <div class="image-box">
-                                                <a href="#" class="image-link">
+                                                <a href="{% url 'product' first.id %}" class="image-link">
                                                     <!-- Display the first item's image -->
                                                     <img src="{{ first.image.url }}" alt="">
 
@@ -756,7 +756,14 @@
                                                 <div class="action-link-left">
                                                     {% comment %} <a href="#" data-bs-toggle="modal"
                                                        data-bs-target="#modalAddcart"> {% endcomment %}
-                                                       <button type="button" value="{{ first.id }}" class="btn btn-secondary" id="add-cart"> Add to Cart </button>
+                                                       <button 
+                                                            type="button" 
+                                                            value="{{ first.id }}" 
+                                                            class="btn btn-secondary add-cart" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#modalAddcart">
+                                                            Add To Cart
+                                                        </button>
                                                     
                                                     {% comment %} </a> {% endcomment %}
                                                 </div>
@@ -1405,51 +1412,31 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
-    {% comment %} <script>
-        $(document).on('click','#add-cart',function(e){
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '{% url "cart_add" %}',
-                data: {
-                    prdouct_id: $('#add-cart').val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    action: 'post'
-
-                },
-                success: function(json){
-                    console.log(json);
-                    //document.getElementById("cart_quantity").
-                    //textContent = json.qty
-                },
-                error: function(xhr,errmsg,err){
-
-                }
-
-            });
-        })
-    </script> {% endcomment %}
     <script>
-        $(document).on('click', '#add-cart', function(e) {
+        $(document).on('click', '.add-cart', function(e) {
             e.preventDefault();
+            const product_id = $(this).val(); // Get the product ID from the button value
+            const product_qty = $('#qty-cart').length ? $('#qty-cart').val() : 1; // Use 1 if no qty-cart element exists
+    
             $.ajax({
                 type: 'POST',
                 url: '{% url "cart_add" %}',
                 data: {
-                    product_id: $('#add-cart').val(), // Changed to product_id
+                    product_id: product_id,
+                    product_qty: product_qty,
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     action: 'post'
                 },
                 success: function(json) {
-                    console.log(json);
-                    // document.getElementById("cart_quantity").textContent = json.qty;
+                    document.getElementById("cart_quantity").textContent = json.qty;
                 },
                 error: function(xhr, errmsg, err) {
-                    console.log("Error:", errmsg);
+                    console.error("Error:", errmsg);
                 }
             });
         });
     </script>
+    
     
 
     

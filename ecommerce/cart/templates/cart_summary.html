@@ -9,6 +9,7 @@
 
     <title>HONO - Multi Purpose HTML Template</title>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/png">
 
@@ -48,7 +49,7 @@
                             <!-- Start Header Logo -->
                             <div class="header-logo">
                                 <div class="logo">
-                                    <a href="{% url 'home'"><img src="/static/assets/img/log21.png" alt=""></a>
+                                    <a href="{% url 'index' %}"><img src="/static/assets/img/log21.png" alt=""></a>
                                 </div>
                             </div>
                             <!-- End Header Logo -->
@@ -118,7 +119,7 @@
                                 <li>
                                     <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                         <i class="icon-bag"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -177,7 +178,7 @@
                             <li>
                                 <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                 </a>
                             </li>
                             <li>
@@ -477,7 +478,7 @@
                             <nav aria-label="breadcrumb">
                                 <ul>
                                     <li><a href="{% url 'index' %}">Home</a></li>
-                                    <li><a href="{% url 'shop' %}.html">Shop</a></li>
+                                    <li><a href="{% url 'shop' %}">Shop</a></li>
                                     <li class="active" aria-current="page">Cart</li>
                                 </ul>
                             </nav>
@@ -497,6 +498,7 @@
                     <div class="col-12">
                         <div class="table_desc">
                             <div class="table_page table-responsive">
+                                {% if cart_products %}
                                 <table>
                                     <!-- Start Cart Table Head -->
                                     <thead>
@@ -511,49 +513,36 @@
                                     </thead> <!-- End Cart Table Head -->
                                     <tbody>
                                         <!-- Start Cart Single Item-->
+                                         
+                                        {% for product in cart_products %}
                                         <tr>
                                             <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
                                             </td>
+                                            
                                             <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="/static/assets/images/product/default/home-1/default-1.jpg"
+                                                        src="{{ product.image.url }}"
                                                         alt=""></a></td>
-                                            <td class="product_name"><a href="product-details-default.html">Handbag
-                                                    fringilla</a></td>
-                                            <td class="product-price">$65.00</td>
-                                            <td class="product_quantity"><label>Quantity</label> <input min="1"
-                                                    max="100" value="1" type="number"></td>
-                                            <td class="product_total">$130.00</td>
+                                                        <td class="product_name"><a href="product-details-default.html">{{ product.category }}</a></td>
+                                                        <td class="product-price">{{ product.sales_price }}</td>
+                                                        {% for key, value in quantites.items %}
+                                                            {% if key == product.id|slugify %}
+                                                        <td class="product_quantity"><label>{{ value }}</label>
+                                                            <input min="1"
+                                                            max="100" value="{{ value }}" type="number">
+                                                        </td>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        <td class="product_total">$130.00</td>
                                         </tr> <!-- End Cart Single Item-->
-                                        <!-- Start Cart Single Item-->
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                            <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="/static/assets/images/product/default/home-1/default-2.jpg"
-                                                        alt=""></a></td>
-                                            <td class="product_name"><a href="product-details-default.html">Handbags
-                                                    justo</a></td>
-                                            <td class="product-price">$90.00</td>
-                                            <td class="product_quantity"><label>Quantity</label> <input min="1"
-                                                    max="100" value="1" type="number"></td>
-                                            <td class="product_total">$180.00</td>
-                                        </tr> <!-- End Cart Single Item-->
-                                        <!-- Start Cart Single Item-->
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                            <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="/static/assets/images/product/default/home-1/default-3.jpg"
-                                                        alt=""></a></td>
-                                            <td class="product_name"><a href="product-details-default.html">Handbag
-                                                    elit</a></td>
-                                            <td class="product-price">$80.00</td>
-                                            <td class="product_quantity"><label>Quantity</label> <input min="1"
-                                                    max="100" value="1" type="number"></td>
-                                            <td class="product_total">$160.00</td>
-                                        </tr> <!-- End Cart Single Item-->
+                                        {% endfor %}
+                                        
+
+                                        
                                     </tbody>
                                 </table>
+                                {% else %}
+                                <span>There is nothing in your cart </span>
+                                {% endif %}
                             </div>
                             <div class="cart_submit">
                                 <button class="btn btn-md btn-golden" type="submit">update cart</button>
@@ -987,6 +976,28 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
+    <script>
+        $(document).on('click', '#add-cart', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'cart_add' %}',
+                data: {
+                    product_id: $('#add-cart').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+                success: function(json) {
+                    //console.log(json);
+                    document.getElementById("cart_quantity").textContent = json.qty;
+                },
+                error: function(xhr, errmsg, err) {
+                    //console.log("Error:", errmsg);
+                }
+            });
+        });
+    </script>
+    
 </body>
 
 

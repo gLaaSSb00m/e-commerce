@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>HONO - Multi Purpose HTML Template</title>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/png">
 
@@ -118,7 +118,7 @@
                                 <li>
                                     <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                         <i class="icon-bag"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -177,7 +177,7 @@
                             <li>
                                 <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                 </a>
                             </li>
                             <li>
@@ -650,7 +650,7 @@
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <div class="sidebar-content">
-                                <a href="product-details-default.html" class="sidebar-banner img-hover-zoom">
+                                <a href="{% url 'shop' %}" class="sidebar-banner img-hover-zoom">
                                     <img class="img-fluid" src="/static/assets/images/banner/side-banner.jpg" alt="">
                                 </a>
                             </div>
@@ -721,7 +721,7 @@
                                                     <div class="product-default-single-item product-color--golden"
                                                         data-aos="fade-up" data-aos-delay="0">
                                                         <div class="image-box">
-                                                            <a href="product-details-default.html" class="image-link">
+                                                            <a href="{% url 'product' product.id %}" class="image-link">
                                                                 <img src="{{ product.image.url }}" alt="">
                                                             </a>
                                                             {% if product.stock_out %}
@@ -748,7 +748,7 @@
                                                         <div class="content">
                                                             <div class="content-left">
                                                                 <h6 class="title"><a
-                                                                        href="product-details-default.html">{{ product.name }}</a></h6>
+                                                                        href="{% url 'product' product.id %}">{{ product.name }}</a></h6>
                                                                 <ul class="review-star">
                                                                     <li class="fill"><i class="ion-android-star"></i>
                                                                     </li>
@@ -781,7 +781,7 @@
                                                 <div class="col-12">
                                                     <!-- Start Product Defautlt Single -->
                                                     <div class="product-list-single product-color--golden">
-                                                        <a href="product-details-default.html"
+                                                        <a href="{% url 'product' product.id %}"
                                                             class="product-list-img-link">
                                                             <img class="img-fluid"
                                                                 src="{{ product.image.url }}"
@@ -794,7 +794,7 @@
                                                         </a>
                                                         <div class="product-list-content">
                                                             <h5 class="product-list-link"><a
-                                                                    href="product-details-default.html">{{ product.name }}</a></h5>
+                                                                    href="{% url 'product' product.id %}">{{ product.name }}</a></h5>
                                                             <ul class="review-star">
                                                                 <li class="fill"><i class="ion-android-star"></i></li>
                                                                 <li class="fill"><i class="ion-android-star"></i></li>
@@ -1227,6 +1227,28 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
+    <script>
+        $(document).on('click', '#add-cart', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'cart_add' %}',
+                data: {
+                    product_id: $('#add-cart').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+                success: function(json) {
+                    //console.log(json);
+                    document.getElementById("cart_quantity").textContent = json.qty;
+                },
+                error: function(xhr, errmsg, err) {
+                    //console.log("Error:", errmsg);
+                }
+            });
+        });
+    </script>
+    
 </body>
 
 

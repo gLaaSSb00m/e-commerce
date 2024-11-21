@@ -9,9 +9,12 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 def product(request,pk):
+    next_items = Product.objects.filter(name="New_arrive")
+    paired_list = list(zip_longest(*[iter(next_items)] * 2))
     product = Product.objects.get(id=pk)
     return render(request,'product.html',{
         'product' : product,
+        'paired_list': paired_list,
     })
 
 
