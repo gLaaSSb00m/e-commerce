@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>HONO - Multi Purpose HTML Template</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
      {% load static%}
@@ -30,7 +31,7 @@
     
     <!-- Main CSS -->
     <!-- <link rel="stylesheet" href="assets/sass/style.css"> -->
-    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
     <link rel="stylesheet" href="/static/assets/css/vendor/vendor.min.css">
     <link rel="stylesheet" href="/static/assets/css/plugins/plugins.min.css">
@@ -104,7 +105,7 @@
                                                     <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
                                                 {% endif %}
                                                 {% if request.user.is_authenticated %}
-                                                    <li><a href="{% url 'cart' %}">Cart</a></li>
+                                                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                                                     <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
                                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                                     <li><a href="{% url 'compare' %}">Compare</a></li>
@@ -138,7 +139,7 @@
                                 <li>
                                     <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                                         <i class="icon-heart"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>cart|length</span>
                                     </a>
                                 </li>
                                 <li>
@@ -197,7 +198,7 @@
                             <li>
                                 <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                                     <i class="icon-heart"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity'>cart|length</span>
                                 </a>
                             </li>
                             <li>
@@ -248,7 +249,7 @@
                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                 <li><a href="404.html">404 Page</a></li>
-                                <li><a href="{% url 'cart' %}">Cart</a></li>
+                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                                 <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
                                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                 <li><a href="{% url 'compare' %}">Compare</a></li>
@@ -289,7 +290,7 @@
 
                 <ul class="user-link">
                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                    <li><a href="{% url 'cart' %}">Cart</a></li>
+                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                     <li><a href="{% url 'checkout' %}">Checkout</a></li>
                 </ul>
             </div>
@@ -326,7 +327,7 @@
 
             <ul class="user-link">
                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                <li><a href="{% url 'cart' %}">Cart</a></li>
+                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
             </ul>
         </div>
@@ -404,7 +405,7 @@
                 <span class="offcanvas-cart-total-price-value">$170.00</span>
             </div>
             <ul class="offcanvas-cart-action-button">
-                <li><a href="{% url 'cart' %}" class="btn btn-block btn-golden">View Cart</a></li>
+                <li><a href="{% url 'cart_summary' %}" class="btn btn-block btn-golden">View Cart</a></li>
                 <li><a href="{% url 'compare' %}" class=" btn btn-block btn-golden mt-5">Checkout</a></li>
             </ul>
         </div> <!-- End  Offcanvas Addcart Wrapper -->
@@ -612,13 +613,13 @@
         <div class="banner-wrapper">
             <div class="container-fluid">
                 <div class="row mb-n6">
-                    {% for banner1 in banners1 %}
+
                     <div class="col-lg-6 col-12 mb-6">
                         <!-- Start Banner Single Item -->
                         <div class="banner-single-item banner-style-1 banner-animation img-responsive"
                             data-aos="fade-up" data-aos-delay="0">
                             <div class="image">
-                                <img src="{{ banner1.image.url }}" alt="">
+                                <img src="{{ banners1.0.image.url }}" alt="">
                             </div>
                             <div class="content">
                                 <h4 class="title">Mini rechargeable
@@ -626,33 +627,75 @@
                                 <h5 class="sub-title">We design your home</h5>
                                 <a href="product-details-default.html"
                                     class="btn btn-lg btn-outline-golden icon-space-left"><span
-                                        class="d-flex align-items-center">Shop now <i
+                                        class="d-flex align-items-center">discover now <i
                                             class="ion-ios-arrow-thin-right"></i></span></a>
                             </div>
                         </div>
-                        {% endfor %}
                         <!-- End Banner Single Item -->
                     </div>
 
                     <div class="col-lg-6 col-12 mb-6">
                         <div class="row mb-n6">
                             <!-- Start Banner Single Item -->
-                            {% for banner2 in banners2 %}
                             <div class="col-lg-6 col-sm-6 mb-6">
                                 <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                     data-aos="fade-up" data-aos-delay="0">
                                     <div class="image">
-                                        <img src="{{ banner2.image.url }}" alt="">
+                                        <img src="{{ banners2.0.image.url }}" alt="">
                                     </div>
                                     <div class="content">
-                                        <a href="{% url 'shop' %}" class="link-text"><span>Discover Now
+                                        <h4 id='1'style='color:white'>Jeans</h4>
+                                        <a href="{% url 'category' 'Jeans'%}" class="link-text"><span>Discover
                                                 now</span></a>
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
                             <!-- End Banner Single Item -->
-                            
+                            <!-- Start Banner Single Item -->
+                            <div class="col-lg-6 col-sm-6 mb-6">
+                                <div class="banner-single-item banner-style-2 banner-animation img-responsive"
+                                    data-aos="fade-up" data-aos-delay="200">
+                                    <div class="image">
+                                        <img src="{{ banners2.1.image.url }}" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h4 id='1'style='color:white'>Sweaters</h4>
+                                        <a href="{% url 'category' 'Sweater'%}" class="link-text"><span>Discover
+                                                now</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Banner Single Item -->
+                            <!-- Start Banner Single Item -->
+                            <div class="col-lg-6 col-sm-6 mb-6">
+                                <div class="banner-single-item banner-style-2 banner-animation img-responsive"
+                                    data-aos="fade-up" data-aos-delay="0">
+                                    <div class="image">
+                                        <img src="{{ banners2.2.image.url }}" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h4 id='1'style='color:white'>T-shirt</h4>
+                                        <a href="{% url 'category' 'T-shrit' %}" class="link-text"><span>Discover
+                                                now</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Banner Single Item -->
+                            <!-- Start Banner Single Item -->
+                            <div class="col-lg-6 col-sm-6 mb-6">
+                                <div class="banner-single-item banner-style-2 banner-animation img-responsive"
+                                    data-aos="fade-up" data-aos-delay="200">
+                                    <div class="image">
+                                        <img src="{{ banners2.3.image.url }}" alt="">
+                                    </div>
+                                    <div class="content">
+                                        <h4 id='1'style='color:white'>Shirts</h4>
+                                            <a href="{% url 'category' 'Shirt'%}" class="link-text"><span>Discover
+                                                now</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Banner Single Item -->
                         </div>
                     </div>
                 </div>
@@ -661,6 +704,7 @@
         </div>
     </div>
     <!-- End Banner Section -->
+
 
     <!-- Start Product Default Slider Section -->
     <div class="product-default-slider-section section-top-gap-100 section-fluid">
@@ -710,8 +754,11 @@
                                             {% endif %}
                                             <div class="action-link">
                                                 <div class="action-link-left">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                       data-bs-target="#modalAddcart">Add to Cart</a>
+                                                    {% comment %} <a href="#" data-bs-toggle="modal"
+                                                       data-bs-target="#modalAddcart"> {% endcomment %}
+                                                       <button type="button" value="{{ first.id }}" class="btn btn-secondary" id="add-cart"> Add to Cart </button>
+                                                    
+                                                    {% comment %} </a> {% endcomment %}
                                                 </div>
                                                 <div class="action-link-right">
                                                     <a href="#" data-bs-toggle="modal"
@@ -740,6 +787,7 @@
                                         </div>
                                     </div>
                                 {% endfor %}
+                                
                                     <!-- End Product Default Single Item -->
                                     <!-- Start Product Default Single Item -->
                                     
@@ -1018,15 +1066,11 @@
                                 data-aos-delay="400">
                                 <h5 class="title">CATEGORIES</h5>
                                 <ul class="footer-nav">
-                                    {% for category in catagory%}
-                                    <li class="py-2 px-2 rounded-xl{% if category.id == catagory_id %} bg-gray-200{% endif %}">
-                                        <a href="#?query={{ query }}&category={{ category.id }}">{{ category.name}}</a></li>
-                                    {%endfor%}
-                                    {% comment %} <li><a href="#">Decorative</a></li>
-                                    <li><a href="#">Kitchen utensils</a></li>
-                                    <li><a href="#">Chair & Bar stools</a></li>
-                                    <li><a href="#">Sofas and Armchairs</a></li>
-                                    <li><a href="#">Interior lighting</a></li> {% endcomment %}
+                                    {%for category in categories%}
+                                    {% if category.name != 'BLOG'%}
+                                    <li><a href="{% url 'category' '{{ category.name }}'%}">{{category.name}}</a></li>
+                                    {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <!-- End Footer Single Item -->
@@ -1144,7 +1188,7 @@
                                         <div class="modal-add-cart-info"><i class="fa fa-check-square"></i>Added to cart
                                             successfully!</div>
                                         <div class="modal-add-cart-product-cart-buttons">
-                                            <a href="{% url 'cart' %}">View Cart</a>
+                                            <a href="{% url 'cart_summary' %}">View Cart</a>
                                             <a href="{% url 'checkout' %}">Checkout</a>
                                         </div>
                                     </div>
@@ -1355,11 +1399,60 @@
     <script src="/static/assets/js/plugins/ajax-mail.js"></script> -->
 
     <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+    
     <script src="/static/assets/js/vendor/vendor.min.js"></script>
     <script src="/static/assets/js/plugins/plugins.min.js"></script>
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
+    {% comment %} <script>
+        $(document).on('click','#add-cart',function(e){
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "cart_add" %}',
+                data: {
+                    prdouct_id: $('#add-cart').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+
+                },
+                success: function(json){
+                    console.log(json);
+                    //document.getElementById("cart_quantity").
+                    //textContent = json.qty
+                },
+                error: function(xhr,errmsg,err){
+
+                }
+
+            });
+        })
+    </script> {% endcomment %}
+    <script>
+        $(document).on('click', '#add-cart', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "cart_add" %}',
+                data: {
+                    product_id: $('#add-cart').val(), // Changed to product_id
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+                success: function(json) {
+                    console.log(json);
+                    // document.getElementById("cart_quantity").textContent = json.qty;
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log("Error:", errmsg);
+                }
+            });
+        });
+    </script>
+    
+
+    
 </body>
 
 

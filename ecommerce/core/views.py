@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render,redirect
 from itertools import zip_longest
 from .forms import LoginForm, SignUpForm
-from .models import Product
+from .models import Product,Category
 from django.db.models import Q
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
@@ -15,7 +15,25 @@ def product(request,pk):
     })
 
 
+def category(request, foo):
+    
+    try:
+        category = Category.objects.get(name=foo)
+        products = Product.objects.filter(category=category)
+        return render(request, 'category.html',{
+            'products': products,
+            'category':category,
+        })    
+    except:
+        messages.success(request, ("That category doesn't exist"))
+        return redirect('index')
+        raise
+        
+    
+    
 def index(request):
+    
+    categories= Category.objects.all()
     products=Product.objects.all()
     hero_sliders = Product.objects.filter(name="Hero_slider")
     banners1 = Product.objects.filter(name="Banner1")
@@ -37,6 +55,8 @@ def index(request):
         'banners4':banners4,
         'paired_list1':paired_list1,
         'blogs':blogs,
+        'categories':categories,
+        
     })
 def shop(request):
     products=Product.objects.all()
@@ -53,8 +73,9 @@ def my_account(request):
     return  render(request,'my-account.html')
 def checkout(request):
     return render(request,'checkout.html')
-def cart(request):
-    return render(request,'cart.html')
+
+
+
 def empty_cart(request):
     return  render(request,'empty-cart.html')
 def wishlist(request):
