@@ -88,7 +88,7 @@
                                             <ul class="sub-menu">
                                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                                                <li><a href="{% url 'cart' %}">Cart</a></li>
+                                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                                                 <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
                                                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                                 <li><a href="{% url 'compare' %}">Compare</a></li>
@@ -223,7 +223,7 @@
                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                 <li><a href="404.html">404 Page</a></li>
-                                <li><a href="{% url 'cart' %}">Cart</a></li>
+                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                                 <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
                                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                 <li><a href="{% url 'compare' %}">Compare</a></li>
@@ -259,7 +259,7 @@
 
                 <ul class="user-link">
                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                    <li><a href="{% url 'cart' %}">Cart</a></li>
+                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                     <li><a href="{% url 'checkout' %}">Checkout</a></li>
                 </ul>
             </div>
@@ -296,7 +296,7 @@
 
             <ul class="user-link">
                 <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                <li><a href="{% url 'cart' %}">Cart</a></li>
+                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
             </ul>
         </div>
@@ -374,7 +374,7 @@
                 <span class="offcanvas-cart-total-price-value">$170.00</span>
             </div>
             <ul class="offcanvas-cart-action-button">
-                <li><a href="{% url 'cart' %}" class="btn btn-block btn-golden">View Cart</a></li>
+                <li><a href="{% url 'cart_summary' %}" class="btn btn-block btn-golden">View Cart</a></li>
                 <li><a href="{% url 'compare' %}" class=" btn btn-block btn-golden mt-5">Checkout</a></li>
             </ul>
         </div> <!-- End  Offcanvas Addcart Wrapper -->
@@ -956,7 +956,7 @@
                                         <div class="modal-add-cart-info"><i class="fa fa-check-square"></i>Added to cart
                                             successfully!</div>
                                         <div class="modal-add-cart-product-cart-buttons">
-                                            <a href="{% url 'cart' %}">View Cart</a>
+                                            <a href="{% url 'cart_summary' %}">View Cart</a>
                                             <a href="{% url 'checkout' %}">Checkout</a>
                                         </div>
                                     </div>
