@@ -495,60 +495,64 @@
         <div class="cart-table-wrapper" data-aos="fade-up" data-aos-delay="0">
             <div class="container">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="table_desc">
-                            <div class="table_page table-responsive">
-                                {% if cart_products %}
-                                <table>
-                                    <!-- Start Cart Table Head -->
-                                    <thead>
-                                        <tr>
-                                            <th class="product_remove">Delete</th>
-                                            <th class="product_thumb">Image</th>
-                                            <th class="product_name">Product</th>
-                                            <th class="product-price">Price</th>
-                                            <th class="product_quantity">Quantity</th>
-                                            <th class="product_total">Total</th>
-                                        </tr>
-                                    </thead> <!-- End Cart Table Head -->
-                                    <tbody>
-                                        <!-- Start Cart Single Item-->
-                                         
-                                        {% for product in cart_products %}
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                            
-                                            <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="{{ product.image.url }}"
-                                                        alt=""></a></td>
-                                                        <td class="product_name"><a href="product-details-default.html">{{ product.category }}</a></td>
-                                                        <td class="product-price">{{ product.sales_price }}</td>
-                                                        {% for key, value in quantites.items %}
-                                                            {% if key == product.id|slugify %}
-                                                        <td class="product_quantity"><label>{{ value }}</label>
-                                                            <input min="1"
-                                                            max="100" value="{{ value }}" type="number">
-                                                        </td>
-                                                        {% endif %}
-                                                        {% endfor %}
-                                                        <td class="product_total">$130.00</td>
-                                        </tr> <!-- End Cart Single Item-->
-                                        {% endfor %}
-                                        
+                    {% load custom_filters %}
+<div class="col-12">
+    <div class="table_desc">
+        <div class="table_page table-responsive">
+            {% if cart_products %}
+            <table>
+                <thead>
+                    <tr>
+                        <th class="product_remove">Delete</th>
+                        <th class="product_thumb">Image</th>
+                        <th class="product_name">Product</th>
+                        <th class="product-price">Price</th>
+                        <th class="product_quantity">Quantity</th>
+                        <th class="product_total">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in cart_products %}
+                    <tr>
+                        <td class="product_remove">
+                            <a href="#" class="delete-cart-item" data-product-id="{{ product.id }}">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </td>
+                        <td class="product_thumb">
+                            <a href="product-details-default.html"><img src="{{ product.image.url }}" alt=""></a>
+                        </td>
+                        <td class="product_name">
+                            <a href="product-details-default.html">{{ product.category }}</a>
+                        </td>
+                        <td class="product-price">{{ product.sales_price }}</td>
+                        {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                        <td class="product_quantity">
+                            <label for="select{{ product.id }}">Quantity</label>
+                            <input id="select{{ product.id }}" min="1" max="100" value="{{ value }}" type="number">
+                        </td>
+                        {% endif %}
+                        {% endfor %}
+                        <td class="product_total">
+                            {{ product.sales_price|floatformat:2|mul:quantities|get_item:product.id }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            {% else %}
+            <span>There is nothing in your cart </span>
+            {% endif %}
+        </div>
+        <div class="cart_submit">
+            <button class="btn btn-md btn-golden update-cart" type="submit">Update Cart</button>
+        </div>
+    </div>
+</div>
 
-                                        
-                                    </tbody>
-                                </table>
-                                {% else %}
-                                <span>There is nothing in your cart </span>
-                                {% endif %}
-                            </div>
-                            <div class="cart_submit">
-                                <button class="btn btn-md btn-golden" type="submit">update cart</button>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div> <!-- End Cart Table -->
@@ -573,7 +577,7 @@
                             <div class="coupon_inner">
                                 <div class="cart_subtotal">
                                     <p>Subtotal</p>
-                                    <p class="cart_amount">$215.00</p>
+                                    <p class="cart_amount">{{ totals }}<sup>tk</sup></p>
                                 </div>
                                 <div class="cart_subtotal ">
                                     <p>Shipping</p>
@@ -977,26 +981,32 @@
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
     <script>
-        $(document).on('click', '#add-cart', function(e) {
+        $(document).on('click', '.delete-cart-item', function(e) {
             e.preventDefault();
+            
+            var productid = $(this).data('product-id');  // Get the product ID from the data attribute
+    
             $.ajax({
                 type: 'POST',
-                url: '{% url 'cart_add' %}',
+                url: '{% url "cart_delete" %}',  // The URL to your delete cart view
                 data: {
-                    product_id: $('#add-cart').val(),
+                    product_id: productid,
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     action: 'post'
                 },
                 success: function(json) {
-                    //console.log(json);
-                    document.getElementById("cart_quantity").textContent = json.qty;
+                    console.log("Deleted product " + productid);
+                    location.reload();  // Reload the page to update the cart after deletion
                 },
                 error: function(xhr, errmsg, err) {
-                    //console.log("Error:", errmsg);
+                    console.error("Error deleting product " + productid + ": " + errmsg);
                 }
             });
         });
     </script>
+    
+    
+    
     
 </body>
 
