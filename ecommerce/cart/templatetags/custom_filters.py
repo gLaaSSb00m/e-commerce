@@ -4,20 +4,24 @@ register = template.Library()
 
 @register.filter(name='get_item')
 def get_item(dictionary, key):
-    """
-    Retrieves a value from a dictionary using a key.
-    """
     try:
-        return dictionary.get(key)
+        return dictionary.get(str(key))  # Convert key to string
     except AttributeError:
         return None
 
+
+
 @register.filter(name='mul')
 def mul(value, arg):
-    """
-    Multiplies the value by the argument.
-    """
     try:
         return float(value) * float(arg)
     except (ValueError, TypeError):
         return None
+
+
+# Test values
+sales_price = 10.00
+quantity = 2
+total = mul(sales_price, quantity)
+print(total)  # Should print 20.0
+

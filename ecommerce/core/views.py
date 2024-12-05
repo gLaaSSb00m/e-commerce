@@ -1,17 +1,53 @@
-from django.shortcuts import redirect, render,redirect
+from django.http import Http404
+from django.shortcuts import get_object_or_404, redirect, render,redirect
 from itertools import zip_longest
-from .forms import LoginForm, SignUpForm
-from .models import Product,Category
+from .forms import LoginForm, SignUpForm,UpdateUserForm
+from .models import Category, FirstBanner, HeoroSlider, Product, SecondBanner,ThirdBanner,NewArival,BestSales
 from django.db.models import Q
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
+
+
+
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user =User.objects.get(id=request.user.id)
+        user_form =UpdateUserForm(request.POST or None, instance=current_user)
+        
+        if user_form.is_valid():
+            user_form.save()
+            
+            login(request,current_user)
+            messages.success(request,"USER Has Been Updated")
+            return redirect('index')
+        
+        
+        return render(request, "update_user.html",{
+            'user_form':user_form,
+        })
+    else:
+        messages.success(request, "You are not logged in")
+        return redirect('index')
+    
+
 def product(request,pk):
     next_items = Product.objects.filter(name="New_arrive")
     paired_list = list(zip_longest(*[iter(next_items)] * 2))
-    product = Product.objects.get(id=pk)
+    product = None
+
+    product = Product.objects.filter(id=pk).first()  # Check in Product
+    # Try each model in order of priority
+    if not product:
+        product = BestSales.objects.filter(id=pk).first()
+        # Check in BestSales
+    if not product:
+        product = NewArival.objects.filter(id=pk).first()  # Check in NewArival first
+    if not product:
+        raise Http404("Product does not exist")
+    
     return render(request,'product.html',{
         'product' : product,
         'paired_list': paired_list,
@@ -38,16 +74,14 @@ def index(request):
     
     categories= Category.objects.all()
     products=Product.objects.all()
-    hero_sliders = Product.objects.filter(name="Hero_slider")
-    banners1 = Product.objects.filter(name="Banner1")
-    banners2 = Product.objects.filter(name="Banner2")
-    banners3 = Product.objects.filter(name="banners3")
+    hero_sliders = HeoroSlider.objects.all()
+    banners1 = FirstBanner.objects.all()
+    banners2 = SecondBanner.objects.all()
+    banners3 = ThirdBanner.objects.all()
     banners4 =  Product.objects.filter(name='banner4')
     blogs= Product.objects.filter(name="BLOG")
-    next_items = Product.objects.filter(name="New_arrive")  # Adjust this slice as needed
-    paired_list = list(zip_longest(*[iter(next_items)] * 2))
-    next_items1 = Product.objects.filter(name="best_seller")
-    paired_list1 = list(zip_longest(*[iter(next_items1)] * 2))# Pairs of items
+    paired_list = list(zip_longest(NewArival.objects.all()))
+    paired_list1 = list(zip_longest(BestSales.objects.all()))
     return render(request, 'index.html', {
         'paired_list': paired_list,
         'products':products,
@@ -67,13 +101,12 @@ def shop(request):
         'products':products,
     })
 def blog(request):
-    return  render(request,'blog-list-sidebar-left.html')
+    return  render(request,'blog.html')
 def faq(request):
     return  render(request,'faq.html')
 def privacy_policy(request):
     return render(request,'privacy-policy.html')
-def my_account(request):
-    return  render(request,'my-account.html')
+
 def checkout(request):
     return render(request,'checkout.html')
 

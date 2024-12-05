@@ -89,21 +89,35 @@
                                             <ul class="sub-menu">
                                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
-                                                <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
-                                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                                                <li><a href="{% url 'compare' %}">Compare</a></li>
-                                                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                                <li><a href="{% url 'login' %}">Login</a></li>
-                                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                {% if user.is_authenticated == False %}
+                                                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                                                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                                                {% endif %}
+                                                {% if request.user.is_authenticated %}
+                                                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
+                                                    <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
+                                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                                    <li><a href="{% url 'compare' %}">Compare</a></li>
+                                                    <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                                                    <li><a href="{% url 'update_user' %}">My Account</a></li>
+                                                {% endif %}
                                             </ul>
                                         </li>
+                                        {% if user.is_authenticated%}
                                         <li>
                                             <a href="{% url 'about_us' %}">About Us</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'contact_us' %}">Contact Us</a>
                                         </li>
+                                        {% endif %}
+                                            {% if user.is_authenticated %}
+                                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                                            {% else %}
+                                            <li><a href="{% url 'login' %}">Login</a></li>
+                                            {% comment %} <span>or</span> {% endcomment %}
+                                            <li><a href="{% url 'register' %}">Sign Up</a></li>
+                                            {% endif %}
                                     </ul>
                                 </nav>
                             </div>
@@ -230,7 +244,7 @@
                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
                                 <li><a href="{% url 'login' %}">Login</a></li>
-                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                <li><a href="{% url 'update_user' %}">My Account</a></li>
                             </ul>
                         </li>
                         <li><a href="{% url 'about_us' %}">About Us</a></li>
@@ -500,27 +514,36 @@
                         <!-- Start Large Image -->
                         <div class="product-large-image product-large-image-vartical swiper-container ml-5">
                             <div class="swiper-wrapper">
+                                {% if product.image.all.exists %}
+                                {% for img in product.image.all %}
                                 <div class="product-image-large-image swiper-slide zoom-image-hover img-responsive">
-                                    <img src="{{product.image.url}}" alt="">
+                                    <img src="{{ img.image.url }}" alt="">
                                 </div>
-                                <div class="/static/product-image-large-image swiper-slide zoom-image-hover img-responsive">
-                                    <img src="{{product.image.url}}" alt="">
+                                {% endfor %}
+                                {% else %}
+                                <div class="product-image-large-image swiper-slide zoom-image-hover img-responsive">
+                                    <img src="{{ product.image.url }}" alt="">
                                 </div>
-                                
+                                {% endif %}
                             </div>
                         </div>
                         <!-- End Large Image -->
                         <!-- Start Thumbnail Image -->
                         <div class="product-image-thumb product-image-thumb-vartical swiper-container pos-relative">
                             <div class="swiper-wrapper">
+                                {% if product.image.all.exists %}
+                                {% for img in product.image.all %}
+                                <div class="product-image-thumb-single swiper-slide">
+                                    <img class="img-fluid" src="{{ img.image.url }}"
+                                        alt="">
+                                </div>
+                                {% endfor %}
+                                {% else %}
                                 <div class="product-image-thumb-single swiper-slide">
                                     <img class="img-fluid" src="{{product.image.url}}"
                                         alt="">
                                 </div>
-                                <div class="product-image-thumb-single swiper-slide">
-                                    <img class="img-fluid" src="{{product.image.url}}"
-                                        alt="">
-                                </div>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- End Thumbnail Image -->
@@ -618,6 +641,7 @@
                                 <div class="product-add-to-cart-btn">
                                     
                                     <button 
+                                    
                                         type="button" 
                                         value="{{ product.id }}" 
                                         class="btn btn-secondary add-cart" 
@@ -1043,7 +1067,7 @@
                                 data-aos-delay="200">
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="{% url 'my_account' %}">My account</a></li>
+                                    <li><a href="{% url 'update_user' %}">My account</a></li>
                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>

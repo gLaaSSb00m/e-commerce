@@ -93,7 +93,7 @@
                                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
                                                 <li><a href="{% url 'login' %}">Login</a></li>
-                                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                <li><a href="{% url 'update_user' %}">My Account</a></li>
                                             </ul>
                                         </li>
                                         <li>
@@ -207,32 +207,65 @@
                 <!-- Start Mobile Menu Nav -->
                 <div class="offcanvas-menu">
                     <ul>
-                        <li>
-                            <a href="{% url 'index' %}"><span>Home</span></a>
+                        <li class="has-dropdown">
+                            <a class="active main-menu-link" href="{% url 'index' %}">
+                                Home
+                            </a>
+                            <!-- Sub Menu -->
                         </li>
-                        <li>
-                            <a href="{% url 'shop' %}"><span>Shop</span></a>
+                        <li class="has-dropdown has-megaitem">
+                            <a href="{% url 'shop' %}">Shop</a>
+                            <!-- Mega Menu -->
+                            <div class="mega-menu">
+                                
+                                <div class="menu-banner">
+                                    <a href="#" class="menu-banner-link">
+                                        <img class="menu-banner-img"
+                                            src="/static/assets/images/banner/menu-banner.jpg" alt="">
+                                    </a>
+                                </div>
+                            </div>
                         </li>
-                        <li>
-                            <a href="{% url 'blog' %}"><span>Blogs</span></a>
+                        <li class="has-dropdown">
+                            <a href="{% url 'blog'  %}">Blog</a>
+                            <!-- Sub Menu -->
+                            
                         </li>
-                        <li>
-                            <a href="#"><span>Pages</span></a>
-                            <ul class="mobile-sub-menu">
+                        <li class="has-dropdown">
+                            <a href="#">Pages <i class="fa fa-angle-down"></i></a>
+                            <!-- Sub Menu -->
+                            <ul class="sub-menu">
                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                                <li><a href="404.html">404 Page</a></li>
-                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
-                                <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
-                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                                <li><a href="{% url 'compare' %}">Compare</a></li>
-                                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                <li><a href="{% url 'login' %}">Login</a></li>
-                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                {% if user.is_authenticated == False %}
+                                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                                {% endif %}
+                                {% if request.user.is_authenticated %}
+                                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
+                                    <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
+                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                    <li><a href="{% url 'compare' %}">Compare</a></li>
+                                    <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                                    <li><a href="{% url 'update_user' %}">My Account</a></li>
+                                {% endif %}
                             </ul>
                         </li>
-                        <li><a href="{% url 'about_us' %}">About Us</a></li>
-                        <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                        {% if user.is_authenticated%}
+                        <li>
+                            <a href="{% url 'about_us' %}">About Us</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'contact_us' %}">Contact Us</a>
+                        </li>
+                        {% endif %}
+                            {% if user.is_authenticated %}
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                            {% else %}
+                            <li><a href="{% url 'login' %}">Login</a></li>
+                            {% comment %} <span>or</span> {% endcomment %}
+                            <li><a href="{% url 'register' %}">Sign Up</a></li>
+                            {% endif %}
                     </ul>
                 </div> <!-- End Mobile Menu Nav -->
             </div> <!-- End Mobile Menu -->
@@ -874,7 +907,7 @@
                                 data-aos-delay="200">
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="{% url 'my_account' %}">My account</a></li>
+                                    <li><a href="{% url 'update_user' %}">My account</a></li>
                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
