@@ -9,6 +9,7 @@
 
     <title>HONO - Multi Purpose HTML Template</title>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/png">
 
@@ -48,7 +49,7 @@
                             <!-- Start Header Logo -->
                             <div class="header-logo">
                                 <div class="logo">
-                                    <a href="{% url 'home'"><img src="/static/assets/img/log21.png" alt=""></a>
+                                    <a href="{% url 'index' %}"><img src="/static/assets/img/log21.png" alt=""></a>
                                 </div>
                             </div>
                             <!-- End Header Logo -->
@@ -87,21 +88,35 @@
                                             <ul class="sub-menu">
                                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
-                                                <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
-                                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                                                <li><a href="{% url 'compare' %}">Compare</a></li>
-                                                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                                <li><a href="{% url 'login' %}">Login</a></li>
-                                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                {% if user.is_authenticated == False %}
+                                                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                                                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                                                {% endif %}
+                                                {% if request.user.is_authenticated %}
+                                                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
+                                                    <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
+                                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                                    <li><a href="{% url 'compare' %}">Compare</a></li>
+                                                    <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                                                    <li><a href="{% url 'update_user' %}">My Account</a></li>
+                                                {% endif %}
                                             </ul>
                                         </li>
+                                        {% if user.is_authenticated%}
                                         <li>
                                             <a href="{% url 'about_us' %}">About Us</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'contact_us' %}">Contact Us</a>
                                         </li>
+                                        {% endif %}
+                                            {% if user.is_authenticated %}
+                                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                                            {% else %}
+                                            <li><a href="{% url 'login' %}">Login</a></li>
+                                            {% comment %} <span>or</span> {% endcomment %}
+                                            <li><a href="{% url 'register' %}">Sign Up</a></li>
+                                            {% endif %}
                                     </ul>
                                 </nav>
                             </div>
@@ -118,7 +133,7 @@
                                 <li>
                                     <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                         <i class="icon-bag"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -177,7 +192,7 @@
                             <li>
                                 <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                 </a>
                             </li>
                             <li>
@@ -228,7 +243,7 @@
                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
                                 <li><a href="{% url 'login' %}">Login</a></li>
-                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                <li><a href="{% url 'update_user' %}">My Account</a></li>
                             </ul>
                         </li>
                         <li><a href="{% url 'about_us' %}">About Us</a></li>
@@ -477,7 +492,7 @@
                             <nav aria-label="breadcrumb">
                                 <ul>
                                     <li><a href="{% url 'index' %}">Home</a></li>
-                                    <li><a href="{% url 'shop' %}.html">Shop</a></li>
+                                    <li><a href="{% url 'shop' %}">Shop</a></li>
                                     <li class="active" aria-current="page">Cart</li>
                                 </ul>
                             </nav>
@@ -494,72 +509,73 @@
         <div class="cart-table-wrapper" data-aos="fade-up" data-aos-delay="0">
             <div class="container">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="table_desc">
-                            <div class="table_page table-responsive">
-                                <table>
-                                    <!-- Start Cart Table Head -->
-                                    <thead>
-                                        <tr>
-                                            <th class="product_remove">Delete</th>
-                                            <th class="product_thumb">Image</th>
-                                            <th class="product_name">Product</th>
-                                            <th class="product-price">Price</th>
-                                            <th class="product_quantity">Quantity</th>
-                                            <th class="product_total">Total</th>
-                                        </tr>
-                                    </thead> <!-- End Cart Table Head -->
-                                    <tbody>
-                                        <!-- Start Cart Single Item-->
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                            <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="/static/assets/images/product/default/home-1/default-1.jpg"
-                                                        alt=""></a></td>
-                                            <td class="product_name"><a href="product-details-default.html">Handbag
-                                                    fringilla</a></td>
-                                            <td class="product-price">$65.00</td>
-                                            <td class="product_quantity"><label>Quantity</label> <input min="1"
-                                                    max="100" value="1" type="number"></td>
-                                            <td class="product_total">$130.00</td>
-                                        </tr> <!-- End Cart Single Item-->
-                                        <!-- Start Cart Single Item-->
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                            <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="/static/assets/images/product/default/home-1/default-2.jpg"
-                                                        alt=""></a></td>
-                                            <td class="product_name"><a href="product-details-default.html">Handbags
-                                                    justo</a></td>
-                                            <td class="product-price">$90.00</td>
-                                            <td class="product_quantity"><label>Quantity</label> <input min="1"
-                                                    max="100" value="1" type="number"></td>
-                                            <td class="product_total">$180.00</td>
-                                        </tr> <!-- End Cart Single Item-->
-                                        <!-- Start Cart Single Item-->
-                                        <tr>
-                                            <td class="product_remove"><a href="#"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                            <td class="product_thumb"><a href="product-details-default.html"><img
-                                                        src="/static/assets/images/product/default/home-1/default-3.jpg"
-                                                        alt=""></a></td>
-                                            <td class="product_name"><a href="product-details-default.html">Handbag
-                                                    elit</a></td>
-                                            <td class="product-price">$80.00</td>
-                                            <td class="product_quantity"><label>Quantity</label> <input min="1"
-                                                    max="100" value="1" type="number"></td>
-                                            <td class="product_total">$160.00</td>
-                                        </tr> <!-- End Cart Single Item-->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="cart_submit">
-                                <button class="btn btn-md btn-golden" type="submit">update cart</button>
-                            </div>
-                        </div>
-                    </div>
+                    {% load custom_filters %}
+<div class="col-12">
+    <div class="table_desc">
+        <div class="table_page table-responsive">
+            {% if cart_products %}
+            <table>
+                <thead>
+                    <tr>
+                        <th class="product_remove">Delete</th>
+                        <th class="product_thumb">Image</th>
+                        <th class="product_name">Product</th>
+                        <th class="product-price">Price</th>
+                        <th class="product_quantity">Quantity</th>
+                        <th class="product_total">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in cart_products %}
+                    <tr>
+                        <td class="product_remove">
+                            <a href="#" class="delete-cart-item" data-product-id="{{ product.id }}">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </td>
+                        <td class="product_thumb">
+                            <a href="{% url 'product' product.id %}"><img src="{{ product.image.url }}" alt=""></a>
+                        </td>
+                        <td class="product_name">
+                            <a href="{% url 'category' product.category %}">{{ product.category }}</a>
+                        </td>
+                        <td class="product-price">{{ product.sales_price }}</td>
+                        {% for key, value in quantities.items %}
+                        {% if key == product.id|slugify %}
+                        <td class="product_quantity">
+                            <label for="select{{ product.id }}">Quantity</label>
+                            <input id="select{{ product.id }}" min="1" max="100" value="{{ value }}" type="number">
+                        </td>
+                        {% endif %}
+                        {% endfor %}
+                        {% load custom_filters %}
+
+                        <td class="product_total" id="total-{{ product.id }}"> 
+                            {% with quantities|get_item:product.id as quantity %}
+                                {% if quantity %}
+                                    {{ product.sales_price|mul:quantity|floatformat:2 }}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        
+                        
+                        
+                                               
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <span>There is nothing in your cart </span>
+            {% endif %}
+        </div>
+        <div class="cart_submit">
+            <button class="btn btn-md btn-golden update-cart" type="submit">Update Cart</button>
+        </div>
+    </div>
+</div>
+
+                    
                 </div>
             </div>
         </div> <!-- End Cart Table -->
@@ -584,7 +600,7 @@
                             <div class="coupon_inner">
                                 <div class="cart_subtotal">
                                     <p>Subtotal</p>
-                                    <p class="cart_amount">$215.00</p>
+                                    <p class="cart_amount">{{ totals }}<sup>tk</sup></p>
                                 </div>
                                 <div class="cart_subtotal ">
                                     <p>Shipping</p>
@@ -634,7 +650,7 @@
                                 data-aos-delay="200">
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="{% url 'my_account' %}">My account</a></li>
+                                    <li><a href="{% url 'update_user' %}">My account</a></li>
                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
@@ -987,6 +1003,64 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
+    <script>
+        // Function to handle cart updates
+        $(document).on('click', '.update-cart', function(e) {
+            e.preventDefault();
+    
+            $('.product_quantity input').each(function() {
+                var product_id = $(this).attr('id').replace('select', '');  // Extract product ID from input ID
+                var product_qty = $(this).val();  // Get the quantity value
+    
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "cart_update" %}',  // URL to your update cart view
+                    data: {
+                        product_id: product_id,
+                        product_qty: product_qty,
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        action: 'post'
+                    },
+                    success: function(json) {
+                        console.log("Updated product " + product_id + " to quantity " + product_qty);
+                        console.log("Updated product " - product_id - " to quantity " - product_qty);
+                        location.reload();  // Reload the page to update the cart after updating
+                    },
+                    error: function(xhr, errmsg, err) {
+                        console.error("Error updating product " + product_id + ": " + errmsg);
+                    }
+                });
+            });
+        });
+    
+        // Function to handle cart item deletion
+        $(document).on('click', '.delete-cart-item', function(e) {
+            e.preventDefault();
+            
+            var productid = $(this).data('product-id');  // Get the product ID from the data attribute
+    
+            $.ajax({
+                type: 'POST',
+                url: '{% url "cart_delete" %}',  // The URL to your delete cart view
+                data: {
+                    product_id: productid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+                success: function(json) {
+                    console.log("Deleted product " + productid);
+                    location.reload();  // Reload the page to update the cart after deletion
+                },
+                error: function(xhr, errmsg, err) {
+                    console.error("Error deleting product " + productid + ": " + errmsg);
+                }
+            });
+        });
+    </script>
+    
+    
+    
+    
 </body>
 
 

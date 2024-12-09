@@ -110,7 +110,7 @@
                                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                                     <li><a href="{% url 'compare' %}">Compare</a></li>
                                                     <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                                    <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                    <li><a href="{% url 'update_user' %}">My Account</a></li>
                                                 {% endif %}
                                             </ul>
                                         </li>
@@ -139,13 +139,13 @@
                                 <li>
                                     <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                                         <i class="icon-heart"></i>
-                                        <span class="item-count" id='cart_quantity'>cart|length</span>
+                                        <span class="item-count" >3</span>
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                         <i class="icon-bag"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -198,13 +198,13 @@
                             <li>
                                 <a href="#offcanvas-wishlish" class="offcanvas-toggle">
                                     <i class="icon-heart"></i>
-                                    <span class="item-count" id='cart_quantity'>cart|length</span>
+                                    <span class="item-count" >3</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity' >{{ cart|length }}</span>
                                 </a>
                             </li>
                             <li>
@@ -255,7 +255,7 @@
                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
                                 
-                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                <li><a href="{% url 'update_user' %}">My Account</a></li>
                             </ul>
                         </li>
                         <li><a href="{% url 'about_us' %}">About Us</a></li>
@@ -488,11 +488,18 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form method='get' action='#'>
-            <input name="query" type="search" value="{{ query }}" placeholder="type keyword(s) here" />
+        <form method='POST' action="{% url 'shop' %}">
+            {% csrf_token %}
+            <input name="searched" type="search" value="{{ query }}" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
     </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
     <!-- End Offcanvas Search Bar Section -->
 
     <!-- Offcanvas Overlay -->
@@ -613,13 +620,13 @@
         <div class="banner-wrapper">
             <div class="container-fluid">
                 <div class="row mb-n6">
-
+                    
                     <div class="col-lg-6 col-12 mb-6">
                         <!-- Start Banner Single Item -->
                         <div class="banner-single-item banner-style-1 banner-animation img-responsive"
                             data-aos="fade-up" data-aos-delay="0">
                             <div class="image">
-                                <img src="{{ banners1.0.image.url }}" alt="">
+                                <img src="{{ banners1.0.image.url }}"  alt="{{banners1.0.image.url}}">
                             </div>
                             <div class="content">
                                 <h4 class="title">Mini rechargeable
@@ -632,31 +639,39 @@
                             </div>
                         </div>
                         <!-- End Banner Single Item -->
+                        
+                    
                     </div>
 
                     <div class="col-lg-6 col-12 mb-6">
+
                         <div class="row mb-n6">
+                            {% for img in banners2  %}
+                            
                             <!-- Start Banner Single Item -->
                             <div class="col-lg-6 col-sm-6 mb-6">
                                 <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                     data-aos="fade-up" data-aos-delay="0">
                                     <div class="image">
-                                        <img src="{{ banners2.0.image.url }}" alt="">
+                                        
+                                        <img src="{{  img.image.url  }}" alt="{{ img.name }}">
                                     </div>
                                     <div class="content">
-                                        <h4 id='1'style='color:white'>Jeans</h4>
-                                        <a href="{% url 'category' 'Jeans'%}" class="link-text"><span>Discover
+                                        
+                                        <h4 id='1'style='color:white'>{{img.name}}</h4>
+                                        <a href="{% url 'category'  img.category  %}" class="link-text"><span>Discover
                                                 now</span></a>
                                     </div>
                                 </div>
                             </div>
                             <!-- End Banner Single Item -->
-                            <!-- Start Banner Single Item -->
+                            {% endfor %}
+                            {% comment %} <!-- Start Banner Single Item -->
                             <div class="col-lg-6 col-sm-6 mb-6">
                                 <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                     data-aos="fade-up" data-aos-delay="200">
                                     <div class="image">
-                                        <img src="{{ banners2.1.image.url }}" alt="">
+                                        <img src="/static/assets/images/banner/5.gif" alt="">
                                     </div>
                                     <div class="content">
                                         <h4 id='1'style='color:white'>Sweaters</h4>
@@ -671,7 +686,7 @@
                                 <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                     data-aos="fade-up" data-aos-delay="0">
                                     <div class="image">
-                                        <img src="{{ banners2.2.image.url }}" alt="">
+                                        <img src="/static/assets/images/banner/6.gif" alt="">
                                     </div>
                                     <div class="content">
                                         <h4 id='1'style='color:white'>T-shirt</h4>
@@ -686,7 +701,7 @@
                                 <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                     data-aos="fade-up" data-aos-delay="200">
                                     <div class="image">
-                                        <img src="{{ banners2.3.image.url }}" alt="">
+                                        <img src="/static/assets/images/banner/7.gif" alt="">
                                     </div>
                                     <div class="content">
                                         <h4 id='1'style='color:white'>Shirts</h4>
@@ -695,7 +710,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- End Banner Single Item -->
+                            <!-- End Banner Single Item --> {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -734,59 +749,59 @@
                                 <!-- Additional required wrapper -->
                                 <div class="swiper-wrapper">
                                     <!-- Start Product Default Single Item -->
-                                    {% for first, second in paired_list %}
-                                        <div class="product-default-single-item product-color--golden swiper-slide">
-        
-                                            <div class="image-box">
-                                                <a href="#" class="image-link">
-                                                    <!-- Display the first item's image -->
-                                                    <img src="{{ first.image.url }}" alt="">
+                                    {% for pair in paired_list %}
+            <div class="product-default-single-item product-color--golden swiper-slide">
+                <div class="image-box">
+                    <a href="{% url 'product' pair.0.id %}" class="image-link">
+                        <!-- Display the first item's images -->
+                        {% for img in pair.0.image.all %}
+                            <img src="{{ img.image.url }}" alt="{{ pair.0.name }}">
+                              <!-- Optional: Show only the first image -->
+                        {% endfor %}
+                        <!-- Display the second item's images if it exists -->
+                        {% if pair.1 %}
+                            {% for img in pair.1.image.all %}
+                                <img src="{{ img.image.url }}" alt="{{ pair.1.name }}">
+                                  <!-- Optional: Show only the first image -->
+                            {% endfor %}
+                        {% endif %}
+                    </a>
+                    {% if pair.0.stock_out %}
+                        <div class="tag">
+                            <span>sale</span>
+                        </div>
+                    {% endif %}
+                    <div class="action-link">
+                        <div class="action-link-left">
+                            <button type="button" value="{{ pair.0.id }}" class="btn btn-secondary add-cart" data-bs-toggle="modal" data-bs-target="#modalAddcart">
+                                Add To Cart
+                            </button>
+                        </div>
+                        <div class="action-link-right">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalQuickview"><i class="icon-magnifier"></i></a>
+                            <a href="{% url 'wishlist' %}"><i class="icon-heart"></i></a>
+                            <a href="{% url 'compare' %}"><i class="icon-shuffle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="content-left">
+                        <h6 class="title"><a href="{% url 'shop' %}">{{ pair.0.name }}</a></h6>
+                        <ul class="review-star">
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="empty"><i class="ion-android-star"></i></li>
+                        </ul>
+                    </div>
+                    <div class="content-right">
+                        <span class="price">${{ pair.0.price }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
 
-                                                    <!-- Display the second item's image if it exists -->
-                                                    {% if second %}
-                                                        <img src="{{ second.image.url }}" alt="">
-                                                    {% endif %}
-                                                </a>
-                                            {% if first.stock_out %}
-                                            <div class="tag">
-                                                <span>sale</span>
-                                            </div>
-                                            {% endif %}
-                                            <div class="action-link">
-                                                <div class="action-link-left">
-                                                    {% comment %} <a href="#" data-bs-toggle="modal"
-                                                       data-bs-target="#modalAddcart"> {% endcomment %}
-                                                       <button type="button" value="{{ first.id }}" class="btn btn-secondary" id="add-cart"> Add to Cart </button>
-                                                    
-                                                    {% comment %} </a> {% endcomment %}
-                                                </div>
-                                                <div class="action-link-right">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                       data-bs-target="#modalQuickview"><i
-                                                        class="icon-magnifier"></i></a>
-                                                    <a href="{% url 'wishlist' %}"><i class="icon-heart"></i></a>
-                                                    <a href="{% url 'compare' %}"><i class="icon-shuffle"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="content-left">
-                                                <h6 class="title"><a href="{% url 'shop' %}">Aliquam
-                                                        lobortis</a></h6>
-                                                <ul class="review-star">
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="empty"><i class="ion-android-star"></i></li>
-                                                </ul>
-                                            </div>
-                                            <div class="content-right">
-                                                <span class="price">$75.00 - $85.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
                                 
                                     <!-- End Product Default Single Item -->
                                     <!-- Start Product Default Single Item -->
@@ -815,7 +830,7 @@
                         data-aos-delay="0">
                         
                         <div class="image">
-                            <img class="img-fluid" src="{{ banners3.0.image.url }}" alt="">
+                            <img class="img-fluid" src="/static/assets/images/banner/3.gif" alt="">
                         </div>
                         <div class="content">
                             <h3 class="title">Modern Furniture
@@ -863,57 +878,58 @@
                                 <div class="swiper-wrapper">
                                     <!-- End Product Default Single Item -->
                                     <!-- Start Product Default Single Item -->
-                                    {% for first, second in paired_list1 %}
-                                    <div class="product-default-single-item product-color--golden swiper-slide">
-                                        <div class="image-box">
-                                            <a href="{% url 'product' first
-                                            .id %}" class="image-link">
-                                                <!-- Display the first item's image -->
-                                                <img src="{{ first.image.url }}" alt="">
-
-                                                <!-- Display the second item's image if it exists -->
-                                                {% if second %}
-                                                    <img src="{{ second.image.url }}" alt="">
-                                                {% endif %}
-                                            </a>
-                                            {% if first.stock_out %}
-                                            <div class="tag">
-                                                <span>sale</span>
-                                            </div>
-                                            {% endif %}
-                                            <div class="action-link">
-                                                <div class="action-link-left">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#modalAddcart">Add to Cart</a>
-                                                </div>
-                                                <div class="action-link-right">
-                                                    <a href="#" data-bs-toggle="modal"
-                                                        data-bs-target="#modalQuickview"><i
-                                                            class="icon-magnifier"></i></a>
-                                                    <a href="wishlist.html"><i class="icon-heart"></i></a>
-                                                    <a href="compare.html"><i class="icon-shuffle"></i></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="content">
-                                            <div class="content-left">
-                                                <h6 class="title"><a href="product-details-default.html">Epicuri per
-                                                        lobortis</a></h6>
-                                                <ul class="review-star">
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="fill"><i class="ion-android-star"></i></li>
-                                                    <li class="empty"><i class="ion-android-star"></i></li>
-                                                </ul>
-                                            </div>
-                                            <div class="content-right">
-                                                <span class="price">$68</span>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    {% endfor %}
+                                    {% for pair in paired_list %}
+            <div class="product-default-single-item product-color--golden swiper-slide">
+                <div class="image-box">
+                    <a href="{% url 'product' pair.0.id %}" class="image-link">
+                        <!-- Display the first item's images -->
+                        {% for img in pair.0.image.all %}
+                            <img src="{{ img.image.url }}" alt="{{ pair.0.name }}">
+                              <!-- Optional: Show only the first image -->
+                        {% endfor %}
+                        <!-- Display the second item's images if it exists -->
+                        {% if pair.1 %}
+                            {% for img in pair.1.image.all %}
+                                <img src="{{ img.image.url }}" alt="{{ pair.1.name }}">
+                                  <!-- Optional: Show only the first image -->
+                            {% endfor %}
+                        {% endif %}
+                    </a>
+                    {% if pair.0.stock_out %}
+                        <div class="tag">
+                            <span>sale</span>
+                        </div>
+                    {% endif %}
+                    <div class="action-link">
+                        <div class="action-link-left">
+                            <button type="button" value="{{ pair.0.id }}" class="btn btn-secondary add-cart" data-bs-toggle="modal" data-bs-target="#modalAddcart">
+                                Add To Cart
+                            </button>
+                        </div>
+                        <div class="action-link-right">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#modalQuickview"><i class="icon-magnifier"></i></a>
+                            <a href="{% url 'wishlist' %}"><i class="icon-heart"></i></a>
+                            <a href="{% url 'compare' %}"><i class="icon-shuffle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="content-left">
+                        <h6 class="title"><a href="{% url 'shop' %}">{{ pair.0.name }}</a></h6>
+                        <ul class="review-star">
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="fill"><i class="ion-android-star"></i></li>
+                            <li class="empty"><i class="ion-android-star"></i></li>
+                        </ul>
+                    </div>
+                    <div class="content-right">
+                        <span class="price">${{ pair.0.price }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
                                     <!-- End Product Default Single Item -->
                                     
                                 </div>
@@ -931,12 +947,31 @@
     <!-- Start Banner Section -->
     <div class="banner-section">
         <div class="banner-wrapper clearfix">
+            {% for img in  banners3 %}
             <!-- Start Banner Single Item -->
-             {% for banner4 in banners4 %}
+             
             <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
                 data-aos="fade-up" data-aos-delay="0">
                 <div class="image">
-                    <img class="img-fluid" src="{{banner4.image.url}}" alt="">
+                    <img class="img-fluid" src="{{ img.image.url }}" alt="">
+                </div>
+                <a href="{% url 'category'  img.category  %}" class="content">
+                    <div class="inner">
+                        <h4 class="title">Bar Stool</h4>
+                        <h6 class="sub-title">20 products</h6>
+                    </div>
+                    <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- End Banner Single Item -->
+            {% endfor %}
+            {% comment %} <!-- Start Banner Single Item -->
+             
+            <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
+                data-aos="fade-up" data-aos-delay="0">
+                <div class="image">
+                    <img class="img-fluid" src="/static/assets/images/banner/n2.jpg" alt="">
                 </div>
                 <a href="#" class="content">
                     <div class="inner">
@@ -946,8 +981,42 @@
                     <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
                 </a>
             </div>
-            {% endfor %}
+            
             <!-- End Banner Single Item -->
+            <!-- Start Banner Single Item -->
+             
+            <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
+                data-aos="fade-up" data-aos-delay="0">
+                <div class="image">
+                    <img class="img-fluid" src="/static/assets/images/banner/n3.jpg" alt="">
+                </div>
+                <a href="#" class="content">
+                    <div class="inner">
+                        <h4 class="title">Bar Stool</h4>
+                        <h6 class="sub-title">20 products</h6>
+                    </div>
+                    <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- End Banner Single Item -->
+            <!-- Start Banner Single Item -->
+             
+            <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
+                data-aos="fade-up" data-aos-delay="0">
+                <div class="image">
+                    <img class="img-fluid" src="/static/assets/images/banner/n4.jpg" alt="">
+                </div>
+                <a href="#" class="content">
+                    <div class="inner">
+                        <h4 class="title">Bar Stool</h4>
+                        <h6 class="sub-title">20 products</h6>
+                    </div>
+                    <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
+                </a>
+            </div>
+            
+            <!-- End Banner Single Item --> {% endcomment %}
             
         </div>
     </div>
@@ -981,12 +1050,12 @@
                                 <!-- Additional required wrapper -->
                                 <div class="swiper-wrapper">
                                     <!-- Start Product Default Single Item -->
-                                     {% for blog in blogs%}
+                                     
                                     <div class="blog-default-single-item blog-color--golden swiper-slide">
                                         <div class="image-box">
                                             <a href="blog-single-sidebar-left.html" class="image-link">
                                                 <img class="img-fluid"
-                                                    src="{{blog.image.url}}" alt="">
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
                                             </a>
                                         </div>
                                         <div class="content">
@@ -1004,7 +1073,168 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {% endfor %}
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="blog-default-single-item blog-color--golden swiper-slide">
+                                        <div class="image-box">
+                                            <a href="blog-single-sidebar-left.html" class="image-link">
+                                                <img class="img-fluid"
+                                                    src="/static/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h6 class="title"><a href="#">Blog Post One</a>
+                                            </h6>
+                                            <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.
+                                                Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>
+                                            <div class="inner">
+                                                <a href="blog-single-sidebar-left.html"
+                                                    class="read-more-btn icon-space-left">Read More <span><i
+                                                            class="ion-ios-arrow-thin-right"></i></span></a>
+                                                <div class="post-meta">
+                                                    <a href="#" class="date">24 Apr</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
                                     <!-- End Product Default Single Item -->
                                     
                                 </div>
@@ -1051,7 +1281,7 @@
                                 data-aos-delay="200">
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="{% url 'my_account' %}">My account</a></li>
+                                    <li><a href="{% url 'update_user' %}">My account</a></li>
                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
@@ -1405,51 +1635,31 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
-    {% comment %} <script>
-        $(document).on('click','#add-cart',function(e){
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '{% url "cart_add" %}',
-                data: {
-                    prdouct_id: $('#add-cart').val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    action: 'post'
-
-                },
-                success: function(json){
-                    console.log(json);
-                    //document.getElementById("cart_quantity").
-                    //textContent = json.qty
-                },
-                error: function(xhr,errmsg,err){
-
-                }
-
-            });
-        })
-    </script> {% endcomment %}
     <script>
-        $(document).on('click', '#add-cart', function(e) {
+        $(document).on('click', '.add-cart', function(e) {
             e.preventDefault();
+            const product_id = $(this).val(); // Get the product ID from the button value
+            const product_qty = $('#qty-cart').length ? $('#qty-cart').val() : 1; // Use 1 if no qty-cart element exists
+    
             $.ajax({
                 type: 'POST',
                 url: '{% url "cart_add" %}',
                 data: {
-                    product_id: $('#add-cart').val(), // Changed to product_id
+                    product_id: product_id,
+                    product_qty: product_qty,
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     action: 'post'
                 },
                 success: function(json) {
-                    console.log(json);
-                    // document.getElementById("cart_quantity").textContent = json.qty;
+                    document.getElementById("cart_quantity").textContent = json.qty;
                 },
                 error: function(xhr, errmsg, err) {
-                    console.log("Error:", errmsg);
+                    console.error("Error:", errmsg);
                 }
             });
         });
     </script>
+    
     
 
     

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>HONO - Multi Purpose HTML Template</title>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     {% load static%}
     <link rel="shortcut icon" href="{%static 'favicon.ico'%}" type="image/png">
@@ -110,7 +110,7 @@
                                 data-aos-delay="200">
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="{% url 'my_account' %}">My account</a></li>
+                                    <li><a href="{% url 'update_user' %}">My account</a></li>
                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
@@ -463,6 +463,28 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
+    <script>
+        $(document).on('click', '#add-cart', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'cart_add' %}',
+                data: {
+                    product_id: $('#add-cart').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+                success: function(json) {
+                    //console.log(json);
+                    document.getElementById("cart_quantity").textContent = json.qty;
+                },
+                error: function(xhr, errmsg, err) {
+                    //console.log("Error:", errmsg);
+                }
+            });
+        });
+    </script>
+    
 </body>
 
 

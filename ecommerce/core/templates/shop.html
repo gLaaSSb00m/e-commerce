@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>HONO - Multi Purpose HTML Template</title>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" type="image/png">
 
@@ -44,6 +44,14 @@
             <div class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden">
                 <div class="container-fluid">
                     <div class="row">
+                        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" style= 'color:black; width:20vw' role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
                         <div class="col-12 d-flex align-items-center justify-content-between">
                             <!-- Start Header Logo -->
                             <div class="header-logo">
@@ -93,7 +101,7 @@
                                                 <li><a href="{% url 'compare' %}">Compare</a></li>
                                                 <li><a href="{% url 'checkout' %}">Checkout</a></li>
                                                 <li><a href="{% url 'login' %}">Login</a></li>
-                                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                                <li><a href="{% url 'update_user' %}">My Account</a></li>
                                             </ul>
                                         </li>
                                         <li>
@@ -118,7 +126,7 @@
                                 <li>
                                     <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                         <i class="icon-bag"></i>
-                                        <span class="item-count">3</span>
+                                        <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                     </a>
                                 </li>
                                 <li>
@@ -177,7 +185,7 @@
                             <li>
                                 <a href="#offcanvas-add-cart" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
-                                    <span class="item-count">3</span>
+                                    <span class="item-count" id='cart_quantity'>{{ cart|length }}</span>
                                 </a>
                             </li>
                             <li>
@@ -207,32 +215,65 @@
                 <!-- Start Mobile Menu Nav -->
                 <div class="offcanvas-menu">
                     <ul>
-                        <li>
-                            <a href="{% url 'index' %}"><span>Home</span></a>
+                        <li class="has-dropdown">
+                            <a class="active main-menu-link" href="{% url 'index' %}">
+                                Home
+                            </a>
+                            <!-- Sub Menu -->
                         </li>
-                        <li>
-                            <a href="{% url 'shop' %}"><span>Shop</span></a>
+                        <li class="has-dropdown has-megaitem">
+                            <a href="{% url 'shop' %}">Shop</a>
+                            <!-- Mega Menu -->
+                            <div class="mega-menu">
+                                
+                                <div class="menu-banner">
+                                    <a href="#" class="menu-banner-link">
+                                        <img class="menu-banner-img"
+                                            src="/static/assets/images/banner/menu-banner.jpg" alt="">
+                                    </a>
+                                </div>
+                            </div>
                         </li>
-                        <li>
-                            <a href="{% url 'blog' %}"><span>Blogs</span></a>
+                        <li class="has-dropdown">
+                            <a href="{% url 'blog'  %}">Blog</a>
+                            <!-- Sub Menu -->
+                            
                         </li>
-                        <li>
-                            <a href="#"><span>Pages</span></a>
-                            <ul class="mobile-sub-menu">
+                        <li class="has-dropdown">
+                            <a href="#">Pages <i class="fa fa-angle-down"></i></a>
+                            <!-- Sub Menu -->
+                            <ul class="sub-menu">
                                 <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                 <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
-                                <li><a href="404.html">404 Page</a></li>
-                                <li><a href="{% url 'cart_summary' %}">Cart</a></li>
-                                <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
-                                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
-                                <li><a href="{% url 'compare' %}">Compare</a></li>
-                                <li><a href="{% url 'checkout' %}">Checkout</a></li>
-                                <li><a href="{% url 'login' %}">Login</a></li>
-                                <li><a href="{% url 'my_account' %}">My Account</a></li>
+                                {% if user.is_authenticated == False %}
+                                    <li><a href="{% url 'about_us' %}">About Us</a></li>
+                                    <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                                {% endif %}
+                                {% if request.user.is_authenticated %}
+                                    <li><a href="{% url 'cart_summary' %}">Cart</a></li>
+                                    <li><a href="{% url 'empty_cart' %}">Empty Cart</a></li>
+                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                                    <li><a href="{% url 'compare' %}">Compare</a></li>
+                                    <li><a href="{% url 'checkout' %}">Checkout</a></li>
+                                    <li><a href="{% url 'update_user' %}">My Account</a></li>
+                                {% endif %}
                             </ul>
                         </li>
-                        <li><a href="{% url 'about_us' %}">About Us</a></li>
-                        <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+                        {% if user.is_authenticated%}
+                        <li>
+                            <a href="{% url 'about_us' %}">About Us</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'contact_us' %}">Contact Us</a>
+                        </li>
+                        {% endif %}
+                            {% if user.is_authenticated %}
+                            <li><a href="{% url 'logout' %}">Logout</a></li>
+                            {% else %}
+                            <li><a href="{% url 'login' %}">Login</a></li>
+                            {% comment %} <span>or</span> {% endcomment %}
+                            <li><a href="{% url 'register' %}">Sign Up</a></li>
+                            {% endif %}
                     </ul>
                 </div> <!-- End Mobile Menu Nav -->
             </div> <!-- End Mobile Menu -->
@@ -456,11 +497,22 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form>
-            <input type="search" placeholder="type keyword(s) here" />
+        <form method='POST' action="{% url 'shop' %}">
+            {% csrf_token %}
+            <input name="searched" type="search" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
     </div>
+    {% if searched %}
+        {% for product in searched %}
+            <div>
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.description }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No products found</p>
+    {% endif %}
     <!-- End Offcanvas Search Bar Section -->
 
     <!-- Offcanvas Overlay -->
@@ -650,7 +702,7 @@
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <div class="sidebar-content">
-                                <a href="product-details-default.html" class="sidebar-banner img-hover-zoom">
+                                <a href="{% url 'shop' %}" class="sidebar-banner img-hover-zoom">
                                     <img class="img-fluid" src="/static/assets/images/banner/side-banner.jpg" alt="">
                                 </a>
                             </div>
@@ -721,7 +773,7 @@
                                                     <div class="product-default-single-item product-color--golden"
                                                         data-aos="fade-up" data-aos-delay="0">
                                                         <div class="image-box">
-                                                            <a href="product-details-default.html" class="image-link">
+                                                            <a href="{% url 'product' product.id %}" class="image-link">
                                                                 <img src="{{ product.image.url }}" alt="">
                                                             </a>
                                                             {% if product.stock_out %}
@@ -748,7 +800,7 @@
                                                         <div class="content">
                                                             <div class="content-left">
                                                                 <h6 class="title"><a
-                                                                        href="product-details-default.html">{{ product.name }}</a></h6>
+                                                                        href="{% url 'product' product.id %}">{{ product.name }}</a></h6>
                                                                 <ul class="review-star">
                                                                     <li class="fill"><i class="ion-android-star"></i>
                                                                     </li>
@@ -781,7 +833,7 @@
                                                 <div class="col-12">
                                                     <!-- Start Product Defautlt Single -->
                                                     <div class="product-list-single product-color--golden">
-                                                        <a href="product-details-default.html"
+                                                        <a href="{% url 'product' product.id %}"
                                                             class="product-list-img-link">
                                                             <img class="img-fluid"
                                                                 src="{{ product.image.url }}"
@@ -794,7 +846,7 @@
                                                         </a>
                                                         <div class="product-list-content">
                                                             <h5 class="product-list-link"><a
-                                                                    href="product-details-default.html">{{ product.name }}</a></h5>
+                                                                    href="{% url 'product' product.id %}">{{ product.name }}</a></h5>
                                                             <ul class="review-star">
                                                                 <li class="fill"><i class="ion-android-star"></i></li>
                                                                 <li class="fill"><i class="ion-android-star"></i></li>
@@ -874,7 +926,7 @@
                                 data-aos-delay="200">
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
-                                    <li><a href="{% url 'my_account' %}">My account</a></li>
+                                    <li><a href="{% url 'update_user' %}">My account</a></li>
                                     <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
@@ -1227,6 +1279,28 @@
 
     <!-- Main JS -->
     <script src="/static/assets/js/main.js"></script>
+    <script>
+        $(document).on('click', '#add-cart', function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'cart_add' %}',
+                data: {
+                    product_id: $('#add-cart').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    action: 'post'
+                },
+                success: function(json) {
+                    //console.log(json);
+                    document.getElementById("cart_quantity").textContent = json.qty;
+                },
+                error: function(xhr, errmsg, err) {
+                    //console.log("Error:", errmsg);
+                }
+            });
+        });
+    </script>
+    
 </body>
 
 
