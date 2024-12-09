@@ -488,11 +488,18 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form method='get' action='#'>
-            <input name="query" type="search" value="{{ query }}" placeholder="type keyword(s) here" />
+        <form method='POST' action="{% url 'shop' %}">
+            {% csrf_token %}
+            <input name="searched" type="search" value="{{ query }}" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
     </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
     <!-- End Offcanvas Search Bar Section -->
 
     <!-- Offcanvas Overlay -->

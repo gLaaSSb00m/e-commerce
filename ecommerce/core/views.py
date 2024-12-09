@@ -10,6 +10,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
 
+def search(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        results = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+        
+        if not results:
+            messages.success(request, "This Product Doesn't Available")
+            return render(request, 'index.html')
+        else:
+            return render(request, 'shop.html', {'searched': results})
+    else:
+        return render(request, 'index.html')
+
 
 
 def update_user(request):
