@@ -16,7 +16,7 @@ def search(request):
         results = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
         
         if not results:
-            messages.success(request, "This Product Doesn't Available")
+            messages.success(request, "No products found.")
             return render(request, 'index.html')
         else:
             return render(request, 'shop.html', {'searched': results})
