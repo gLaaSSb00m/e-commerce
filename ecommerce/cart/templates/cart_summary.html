@@ -471,8 +471,9 @@
     <!-- Start Offcanvas Search Bar Section -->
     <div id="search" class="search-modal">
         <button type="button" class="close">×</button>
-        <form>
-            <input type="search" placeholder="type keyword(s) here" />
+        <form method='POST' action="{% url 'shop' %}">
+            {% csrf_token %}
+            <input name="results" type="search" placeholder="type keyword(s) here" />
             <button type="submit" class="btn btn-lg btn-golden">Search</button>
         </form>
     </div>
@@ -585,14 +586,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6">
-                        <div class="coupon_code left" data-aos="fade-up" data-aos-delay="200">
-                            <h3>Coupon</h3>
-                            <div class="coupon_inner">
-                                <p>Enter your coupon code if you have one.</p>
-                                <input class="mb-2" placeholder="Coupon code" type="text">
-                                <button type="submit" class="btn btn-md btn-golden">Apply coupon</button>
-                            </div>
-                        </div>
+                        
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="coupon_code right" data-aos="fade-up" data-aos-delay="400">
@@ -610,7 +604,7 @@
 
                                 <div class="cart_subtotal">
                                     <p>Total</p>
-                                    <p class="cart_amount">215.00 <sup>tk</sup></p>
+                                    <p class="cart_amount">{{ ttotals }} <sup>tk</sup></p>
                                 </div>
                                 <div class="checkout_btn">
                                     <a href="#" class="btn btn-md btn-golden">Proceed to Checkout</a>
@@ -651,7 +645,6 @@
                                 <h5 class="title">MY ACCOUNT</h5>
                                 <ul class="footer-nav">
                                     <li><a href="{% url 'update_user' %}">My account</a></li>
-                                    <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
                                     <li><a href="{% url 'privacy_policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'faq' %}">Frequently Questions</a></li>
                                     <li><a href="#">Order History</a></li>

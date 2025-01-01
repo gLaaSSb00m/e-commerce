@@ -8,6 +8,19 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from payment.forms import ShippingForm
+from payment.models import ShippingAddress
+
+from django.shortcuts import render
+from django.db.models import Q
+from django.contrib import messages
+from .models import Product
+
+from django.shortcuts import render
+from django.contrib import messages
+from django.db.models import Q
+from .models import Product
+
 
 
 def search(request):
@@ -17,32 +30,39 @@ def search(request):
         
         if not results:
             messages.success(request, "No products found.")
-            return render(request, 'index.html')
+            return render(request, 'index.html')  # Redirect to index page with message
         else:
-            return render(request, 'shop.html', {'searched': results})
+            return render(request, 'shop.html', {'products': results})  # Show search results in shop.html
     else:
-        return render(request, 'index.html')
+        return render(request, 'index.html')  # Show the index page if not POST request
+
 
 
 
 def update_user(request):
     if request.user.is_authenticated:
-        current_user =User.objects.get(id=request.user.id)
-        user_form =UpdateUserForm(request.POST or None, instance=current_user)
-        
-        if user_form.is_valid():
+        current_user = User.objects.get(id=request.user.id)
+        # Get the ShippingAddress instance for the logged-in user
+        shipping_user = ShippingAddress.objects.filter(user=current_user).first()
+
+        # Initialize forms with POST data or existing instance
+        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+        shipping_form = ShippingForm(request.POST or None, instance=shipping_user)
+
+        if user_form.is_valid() and shipping_form.is_valid():
             user_form.save()
-            
-            login(request,current_user)
-            messages.success(request,"USER Has Been Updated")
+            shipping_form.save()
+
+            login(request, current_user)
+            messages.success(request, "User information has been updated.")
             return redirect('index')
-        
-        
-        return render(request, "update_user.html",{
-            'user_form':user_form,
+
+        return render(request, "update_user.html", {
+            'user_form': user_form,
+            'shipping_form': shipping_form,
         })
     else:
-        messages.success(request, "You are not logged in")
+        messages.error(request, "You are not logged in.")
         return redirect('index')
     
 
@@ -54,10 +74,10 @@ def product(request,pk):
     product = Product.objects.filter(id=pk).first()  # Check in Product
     # Try each model in order of priority
     if not product:
-        product = BestSales.objects.filter(id=pk).first()
+        product = NewArival.objects.filter(id=pk).first()
         # Check in BestSales
     if not product:
-        product = NewArival.objects.filter(id=pk).first()  # Check in NewArival first
+        product = BestSales.objects.filter(id=pk).first()  # Check in NewArival first
     if not product:
         raise Http404("Product does not exist")
     

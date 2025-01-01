@@ -8,11 +8,15 @@ def cart_summary(request):
     cart_products = cart.get_prods() 
     quantities = cart.get_quants()
     totals = cart.cart_total()
+    ttotals=0
+    if totals > 0:
+        ttotals=totals+120
 
     return render(request, 'cart_summary.html', {
         "cart_products": cart_products, 
         "quantities": quantities,
         "totals": totals,
+        "ttotals": ttotals,
     })
 
 
